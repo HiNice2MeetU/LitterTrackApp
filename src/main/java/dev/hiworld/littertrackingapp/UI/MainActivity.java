@@ -9,7 +9,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
-import dev.hiworld.littertrackingapp.Network.ServerExecutor;
+import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
 import dev.hiworld.littertrackingapp.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     class Test implements Runnable {
         @Override
         public void run() {
-            ServerExecutor.SecureExecute();
+            //ServerExecutor.SecureExecute();
         }
     }
 }
