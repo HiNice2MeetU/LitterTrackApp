@@ -32,7 +32,7 @@ public class UtilityManager {
     private int REQUEST_CODE_PRIVS = 101;
     private String[] REQUIRED_PRIVS;
     private Intent MoveBackToHome;
-    private ArrayList<Integer> Users = new ArrayList<Integer>();
+    private static ArrayList<Integer> Users = new ArrayList<Integer>();
     private static Random rand = new Random();
     private static LinkedList<Integer> IdList = new LinkedList<Integer>();
 
@@ -152,5 +152,31 @@ public class UtilityManager {
         canvas.drawBitmap(originalImage, transformation, paint);
 
         return background;
+    }
+
+    public static String GenorateID(int Limit, String Chars) {
+        // Create Random
+        Random rand = new Random();
+
+        // Make return string
+        String Return = "";
+
+        // Make String
+        for (int i = 0; i < Limit; i++){
+            // Get Cheracter
+            String SelectedCharacter = String.valueOf(Chars.charAt(rand.nextInt(Chars.length())));
+
+            // Add to return
+            Return = Return.concat(SelectedCharacter);
+        }
+
+        // Check if already in list
+        for (int j = 0; j < Users.size(); j++){
+            if (Users.get(j).equals(Return)) {
+                return GenorateID(Limit, Chars);
+            }
+        }
+
+        return Return;
     }
 }

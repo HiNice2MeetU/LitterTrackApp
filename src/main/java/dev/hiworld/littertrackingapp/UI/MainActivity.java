@@ -8,9 +8,11 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import dev.hiworld.littertrackingapp.Network.MQSession;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
 import dev.hiworld.littertrackingapp.R;
+import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,6 +60,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void run() {
             //ServerExecutor.SecureExecute();
+            MQSession Sesh = new MQSession(2);
+
+            // Execute
+            Sesh.Connect("tcp://192.168.6.133:1883");
+            Sesh.Publish("Hello Server");
+
+//            // Sleep
+//            try {
+//                Thread.sleep(50);
+//            } catch (InterruptedException e) {
+//                Log.e("ServerTransport", e.toString() + " at ReadThread");
+//            }
         }
     }
 }
