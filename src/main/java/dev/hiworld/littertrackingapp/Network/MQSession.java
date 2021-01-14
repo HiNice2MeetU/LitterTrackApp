@@ -96,6 +96,8 @@ public class MQSession implements IMqttMessageListener {
             // Msg Params
             MqttMessage Message = new MqttMessage(Content.getBytes());
             Message.setQos(Qos);
+
+            // TODO Set Retained to true at launch
             Message.setRetained(true);
 
             // Public / Log
@@ -123,6 +125,8 @@ public class MQSession implements IMqttMessageListener {
             // Msg Params
             MqttMessage Message = new MqttMessage(Content.getBytes());
             Message.setQos(Qos);
+
+            // TODO Set Retained to true at launch
             Message.setRetained(true);
 
             // Public / Log
