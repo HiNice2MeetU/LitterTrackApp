@@ -29,7 +29,7 @@ import kotlin.jvm.internal.Intrinsics;
 public class UtilityManager {
 
     // Globals
-    private int REQUEST_CODE_PRIVS = 101;
+    private int REQUEST_CODE_PRIVS = 102;
     private String[] REQUIRED_PRIVS;
     private Intent MoveBackToHome;
     private static ArrayList<Integer> Users = new ArrayList<Integer>();
