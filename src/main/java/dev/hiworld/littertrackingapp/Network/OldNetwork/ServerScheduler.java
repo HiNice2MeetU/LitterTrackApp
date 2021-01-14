@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import dev.hiworld.littertrackingapp.Network.SocketResultSet;
-
 public class ServerScheduler implements ServerTransport.ServerListener {
     // Globals
     private ServerTransport ST = ServerTransport.getInstance();

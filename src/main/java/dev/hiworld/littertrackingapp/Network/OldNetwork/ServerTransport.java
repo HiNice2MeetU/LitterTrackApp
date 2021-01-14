@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import dev.hiworld.littertrackingapp.Network.Event;
-import dev.hiworld.littertrackingapp.Network.SocketResultSet;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class ServerTransport {

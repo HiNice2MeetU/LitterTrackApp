@@ -3,8 +3,6 @@ package dev.hiworld.littertrackingapp.Network;
 import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
@@ -15,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import dev.hiworld.littertrackingapp.Network.OldNetwork.SocketResultSet;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQSession implements IMqttMessageListener {

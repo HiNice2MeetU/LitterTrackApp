@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import dev.hiworld.littertrackingapp.Network.Event;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerScheduler;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
-import dev.hiworld.littertrackingapp.Network.SocketResultSet;
+import dev.hiworld.littertrackingapp.Network.OldNetwork.SocketResultSet;
 import dev.hiworld.littertrackingapp.R;
 import dev.hiworld.littertrackingapp.Utility.TrashConA;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
