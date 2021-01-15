@@ -28,6 +28,11 @@ public class MQSession implements IMqttMessageListener {
     ArrayList<ResultListener> ListenerList = new ArrayList<ResultListener>();
 
     // Constructor
+    public MQSession (int Qos, String ID) {
+        this.ID = ID;
+        this.Qos = Qos;
+    }
+
     public MQSession (int Qos) {
         this.Qos = Qos;
         ID = UtilityManager.GenorateID(10, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()");
