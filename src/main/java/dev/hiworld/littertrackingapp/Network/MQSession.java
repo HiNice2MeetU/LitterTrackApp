@@ -38,13 +38,32 @@ public class MQSession implements IMqttMessageListener {
         ID = UtilityManager.GenorateID(10, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()");
     }
 
+    // Add Observer
+    public void AddObserver(ResultListener Input){
+        ListenerList.add(Input);
+    }
+
+    // Remove Observer
+    public void RemoveObserver(ResultListener Input){
+        ListenerList.remove(Input);
+    }
+
+    // Notify Observer
+    public void NotifyObserver(String Msg){
+        // Iterate though list
+        for (int i = 0; i<ListenerList.size(); i++) {
+            // Get Current
+            ResultListener Current = ListenerList.get(i);
+
+            // Notify Observers
+            Current.Update(Msg);
+        }
+    }
+
+    // Observer Interface
     public interface ResultListener {
-
         // When a message is recieved
-        public void Update(SocketResultSet Msg);
-
-        // When error is encountered
-        public void Error(int ID, Exception Err);
+        public void Update(String Msg);
     }
 
     // Connect
@@ -166,6 +185,9 @@ public class MQSession implements IMqttMessageListener {
 
             // Log
             Log.d("MQSession", "Msg Recieved: " + message);
+
+            // Notify Observers
+            NotifyObserver(RawMsg);
         } catch (Exception e) {
             // Error
             Log.e("MQSession", e.toString());

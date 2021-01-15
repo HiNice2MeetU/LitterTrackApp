@@ -66,12 +66,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Sesh.Connect("tcp://192.168.6.133:1883");
             Sesh.Publish("Hello Server");
 
-//            // Sleep
-//            try {
-//                Thread.sleep(50);
-//            } catch (InterruptedException e) {
-//                Log.e("ServerTransport", e.toString() + " at ReadThread");
-//            }
+            // TODO Reove Test Code
+            Sesh.AddObserver(new MQSession.ResultListener() {
+                @Override
+                public void Update(String Msg) {
+                    Log.d("MainActivity", "Recieved: " + Msg);
+                }
+            });
+
+            while (true) {
+
+            }
         }
     }
 }
