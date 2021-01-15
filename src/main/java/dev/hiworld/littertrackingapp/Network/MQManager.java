@@ -1,14 +1,13 @@
 package dev.hiworld.littertrackingapp.Network;
 
 import android.util.Log;
-
 import java.util.ArrayList;
 
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQManager {
     // Globals
-    ArrayList<MQMsg> ListenerList = new ArrayList<MQMsg>();
+    ArrayList<MQMsg> CommandQueue = new ArrayList<MQMsg>();
 
     // MQThread Kill Switch
     private static volatile boolean MQTRunning = true;
@@ -21,6 +20,15 @@ public class MQManager {
     // Execute List of Commands
     public synchronized ArrayList<Integer> ExecuteList(MQMsg Input) {
         return null;
+    }
+
+    // Observer Interface
+    interface MQListener {
+        // When new message comes in
+        public void Update(MQMsg Msg);
+
+        // When new error comes in
+        public void Error(MQMsg Error);
     }
 
     // Start Network Thread
