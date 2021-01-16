@@ -39,6 +39,23 @@ public class MQManager {
         NotifyObserver(new MQMsg(new ArrayList<Object>(),SessionID,"A","Test With Correct TRANSACTION ID"));
         NotifyObserver(new MQMsg(new ArrayList<Object>(),SessionID,"ERR","Test With Correct TRANSACTION ID but it is a ERROR"));
         Log.d("MQManager", "Executed Test Data");
+        //return "A";
+
+        // Log
+        Log.d("MQManager", "===============================================");
+
+        // Json Testing Serialization
+        ArrayList<Object>TestParam = new ArrayList<Object>();
+        TestParam.add("Hallo");
+        TestParam.add(69);
+        TestParam.add(new Event(6969,2323,"A"));
+        String RawJson = EncodeResult(new MQMsg(TestParam,SessionID,"A","JSoN TeStiNg"));
+        Log.d("MQManager", "Serialization: " + RawJson);
+
+        // Json testing deseriralization
+        MQMsg FromJSON = DecodeResult(RawJson);
+        Log.d("MQManager", "DeSerialization: " + FromJSON.toString());
+
         return "A";
     }
 
@@ -174,12 +191,12 @@ public class MQManager {
         }
     }
 
-    public String EncodeResult(MQMsg Input){
+    private String EncodeResult(MQMsg Input){
         Input.AutoFillType();
         return gson.toJson(Input);
     }
 
-    public MQMsg DecodeResult(String input){
+    private MQMsg DecodeResult(String input){
         try {
             // Get Overall JSON Object
             JsonObject MainObj = JsonParser.parseString(input).getAsJsonObject();
@@ -190,8 +207,9 @@ public class MQManager {
             int Result = MainObj.getAsJsonPrimitive("Result").getAsInt();
             String Cmd = MainObj.getAsJsonPrimitive("Cmd").getAsString();
 
-            // Get Object List
+            // Get Object/Object Type List
             JsonArray RawObjList = MainObj.getAsJsonArray("Params");
+            JsonArray ObjListType = MainObj.getAsJsonArray("TypeList");
 
             // TempList Define
             ArrayList<Object>ObjList = new ArrayList<Object>();
@@ -201,11 +219,13 @@ public class MQManager {
                 // Get Current
                 JsonElement Current = RawObjList.get(i);
 
-                // Get Class String
-                String ClassString = Current.getAsString();
+                // Get Class String using ObjListType
+                String ClassString = ObjListType.get(i).getAsString();
+
+                Log.d("MQManager", "ClassString = " + ClassString);
 
                 // if statement for custom classes
-                if (ClassString.equals("Event")) {
+                if (ClassString.equals("Event") || ClassString.equals("dev.hiworld.littertrackingapp.Network.Event")) {
                     // Log
                     Log.d("MQManager", "Msg Detected as event");
 
