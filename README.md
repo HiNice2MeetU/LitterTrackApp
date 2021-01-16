@@ -1,4 +1,4 @@
-# LitterTrackApp
+# LitterTrackApp 
 A android app to track litter
 
 #### What is this?
@@ -14,3 +14,4 @@ It is being developed as an android app in java + the backend (which is not in t
 - Java Paho Client  (Backend)
 - GSON 2.8.6
 - Sqlite JDCB 3.34.0 (Backend)
+- MQTT
