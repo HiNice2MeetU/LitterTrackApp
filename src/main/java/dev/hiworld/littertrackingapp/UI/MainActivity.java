@@ -8,7 +8,11 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
+import dev.hiworld.littertrackingapp.Network.MQMsg;
 import dev.hiworld.littertrackingapp.Network.MQSession;
+import dev.hiworld.littertrackingapp.Network.MQManager;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
 import dev.hiworld.littertrackingapp.R;
@@ -36,6 +40,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NetworkOutThread.setDaemon(true);
         NetworkOutThread.setName("NetSecure");
         NetworkOutThread.start();
+
+        // Test MQManager
+        MQManager MQM = new MQManager();
+
+        MQM.AddObserver("A", new MQManager.MQListener() {
+            @Override
+            public void Update(MQMsg Msg) {
+                Log.d("MQManager", "Message Recieved at MainActivity: " + Msg.toString());
+            }
+
+            @Override
+            public void Error(MQMsg Error) {
+                Log.e("MQManager", "Error Recieved at MainActivity: " + Error.toString());
+                MQM.RemoveObserver(this);
+            }
+        });
+
+        MQM.Execute(null);
     }
 
     @Override

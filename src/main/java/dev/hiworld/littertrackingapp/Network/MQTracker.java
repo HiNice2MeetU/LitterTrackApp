@@ -4,21 +4,26 @@ import java.util.ArrayList;
 
 public class MQTracker {
     // Globals
-    ArrayList<Integer> TransactionID;
-    MQManager.MQListener Listener;
+    protected ArrayList<String> TransactionID;
+    protected MQManager.MQListener Listener;
 
     // Constructor
-    public MQTracker(ArrayList<Integer> transactionID, MQManager.MQListener listener) {
+    public MQTracker(ArrayList<String> transactionID, MQManager.MQListener listener) {
         TransactionID = transactionID;
         Listener = listener;
     }
 
+    public MQTracker(MQManager.MQListener listener) {
+        Listener = listener;
+        TransactionID = new ArrayList<String>();
+    }
+
     // Getters + Setters
-    public ArrayList<Integer> getTransactionID() {
+    public ArrayList<String> getTransactionID() {
         return TransactionID;
     }
 
-    public void setTransactionID(ArrayList<Integer> transactionID) {
+    public void setTransactionID(ArrayList<String> transactionID) {
         TransactionID = transactionID;
     }
 
@@ -28,5 +33,13 @@ public class MQTracker {
 
     public void setListener(MQManager.MQListener listener) {
         Listener = listener;
+    }
+
+    @Override
+    public String toString() {
+        return "MQTracker{" +
+                "TransactionID=" + TransactionID +
+                ", Listener=" + Listener +
+                '}';
     }
 }

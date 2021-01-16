@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class MQMsg {
     // Globals
-    ArrayList<String> TypeList = new ArrayList<String>();
-    ArrayList<Object>Params = new ArrayList<Object>();
-    String SessionID;
-    String TransactionID;
-    String Cmd;
-    int Result;
+    private ArrayList<String> TypeList = new ArrayList<String>();
+    private ArrayList<Object>Params = new ArrayList<Object>();
+    private String SessionID;
+    private String TransactionID;
+    private String Cmd;
+    private int Result;
 
     // Construtors
     public MQMsg(ArrayList<String> typeList, ArrayList<Object> params, String sessionID, String transactionID, String cmd, int result) {
@@ -29,9 +29,16 @@ public class MQMsg {
         Result = result;
     }
 
-    public MQMsg(ArrayList<Object> params, String sessionID, String cmd) {
+    public MQMsg(ArrayList<Object> params, String sessionID, String transactionID, String cmd) {
         Params = params;
         SessionID = sessionID;
+        TransactionID = transactionID;
+        Cmd = cmd;
+    }
+
+    public MQMsg(ArrayList<Object> params, String TID, String cmd) {
+        Params = params;
+        TransactionID = TID;
         Cmd = cmd;
     }
 
@@ -92,5 +99,19 @@ public class MQMsg {
 
     public void setResult(int result) {
         Result = result;
+    }
+
+    // To String
+
+    @Override
+    public String toString() {
+        return "MQMsg{" +
+                "TypeList=" + TypeList +
+                ", Params=" + Params +
+                ", SessionID='" + SessionID + '\'' +
+                ", TransactionID='" + TransactionID + '\'' +
+                ", Cmd='" + Cmd + '\'' +
+                ", Result=" + Result +
+                '}';
     }
 }
