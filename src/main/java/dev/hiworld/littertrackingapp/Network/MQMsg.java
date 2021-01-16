@@ -1,10 +1,12 @@
 package dev.hiworld.littertrackingapp.Network;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class MQMsg {
     // Globals
-    private ArrayList<String> TypeList = new ArrayList<String>();
+    private ArrayList<String>TypeList = new ArrayList<String>();
     private ArrayList<Object>Params = new ArrayList<Object>();
     private String SessionID;
     private String TransactionID;
@@ -112,5 +114,23 @@ public class MQMsg {
                 ", TransactionID='" + TransactionID + '\'' +
                 ", Cmd='" + Cmd + '\'' +
                 '}';
+    }
+
+    public void AutoFillType(){
+        // Empty Param types
+        TypeList.clear();
+
+        // Automagically fill the type spaces
+        if (Params != null) {
+            for (int i = 0; i < Params.size(); i++) {
+                // Get current obj
+                Object Current = Params.get(i);
+
+                // Add class name to param types
+                TypeList.add(Current.getClass().getName());
+            }
+        } else {
+            Log.e("MQMsg", "AutoFill when param == null");
+        }
     }
 }

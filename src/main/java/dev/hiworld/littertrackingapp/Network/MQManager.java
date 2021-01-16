@@ -175,7 +175,8 @@ public class MQManager {
     }
 
     public String EncodeResult(MQMsg Input){
-        return gson.fromJson(Input);
+        Input.AutoFillType();
+        return gson.toJson(Input);
     }
 
     public MQMsg DecodeResult(String input){
