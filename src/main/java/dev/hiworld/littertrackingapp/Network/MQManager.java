@@ -1,15 +1,21 @@
 package dev.hiworld.littertrackingapp.Network;
 
 import android.util.Log;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQManager {
     // Globals
-    LinkedList<MQMsg> CommandQueue = new LinkedList<MQMsg>();
-    ArrayList<MQTracker> ListenerList = new ArrayList<MQTracker>();
+    private LinkedList<MQMsg> CommandQueue = new LinkedList<MQMsg>();
+    private ArrayList<MQTracker> ListenerList = new ArrayList<MQTracker>();
+    private Gson gson = new Gson();
 
     // Make ID
     String SessionID;
@@ -146,14 +152,113 @@ public class MQManager {
             // Execute
             while (MQTRunning) {
                 synchronized (MQManager.this) {
+                    // Check if any commands in queue
+                    if (CommandQueue.size() > 0) {
+                        // Get Current Element
+                        //MQMsg = CommandQueue.removeFirst();
+
+                        // Serialize int Json
+
+                        // Send
+                    }
+
                     // Sleep
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         Log.e("MQManager", e.toString() + " at ReadThread");
                     }
                 }
             }
         }
+    }
+
+    private MQMsg DecodeResult(String input){
+        try {
+            // Get Overall JSON Object
+            JsonObject MainObj = JsonParser.parseString(input).getAsJsonObject();
+
+            // Get Specific Elements
+            String SessionID = MainObj.getAsJsonPrimitive("SessionID").getAsString();
+            String TID = MainObj.getAsJsonPrimitive("TransactionID").getAsString();
+            int Result = MainObj.getAsJsonPrimitive("Result").getAsInt();
+            String Cmd = MainObj.getAsJsonPrimitive("Cmd").getAsString();
+
+            // Get Object List
+            JsonArray RawObjList = MainObj.getAsJsonArray("Params");
+
+            // TempList Define
+            ArrayList<Object>ObjList = new ArrayList<Object>();
+
+            // Iterate through the list
+            for (int i = 0; i<RawObjList.size(); i++) {
+                // Get Current
+                JsonElement Current = RawObjList.get(i);
+
+                // Get Class String
+                String ClassString = Current.getAsString();
+
+                // if statement for custom classes
+                if (ClassString.equals("Event")) {
+                    // Log
+                    Log.d("MQManager", "Msg Detected as event");
+
+                    // Add to temp list
+                    ObjList.add(gson.fromJson(Current.toString(), Event.class));
+                } else if (ClassString.equals("java.util.ArrayList") && Cmd.equals("GetAll")) {
+                    // Log
+                    Log.d("MQManager", "Msg Detected as arraylist full of events");
+
+                    // Add to TempList
+                    Type ListType = new TypeToken<ArrayList<Event>>(){}.getType();
+                    ObjList.add(gson.fromJson(Current.toString(), ListType));
+                } else {
+                    // Log
+                    Log.d("MQManager", "Msg Detected as primative");
+
+                    // Get Current Type
+                    Class CurrentType = Class.forName(ClassString);
+
+                    // if statement for primatives
+                    if (CurrentType == String.class) {
+                        ObjList.add(Current.getAsString());
+                    } else if (CurrentType == Integer.class) {
+                        ObjList.add(Current.getAsInt());
+                    } else if (CurrentType == Double.class) {
+                        ObjList.add(Current.getAsInt());
+                    } else {
+                        // No datatype found
+                        Log.e("ServerTransport", "There was an unexpected datatype: " + Current.toString() + " DATATYPE: " + ClassString);
+
+                        // Throw Error
+                        throw(new NullPointerException());
+                    }
+                }
+            }
+
+            // Return value
+            return new MQMsg(ObjList, SessionID, TID, Cmd, Result);
+
+        } catch (Exception e) {
+            // Log
+            Log.e("MQManager", e.toString() + "@" + "JSONDecoding");
+
+            // Notify Error
+            NotifyObserver(ErrorMaker(e, "JSONDecoding"));
+
+            return null;
+        }
+    }
+
+
+    private MQMsg ErrorMaker(Exception e, String Where) {
+        // Create Params
+        ArrayList<Object> Params = new ArrayList<Object>();
+
+        // Add Exeception to params
+        Params.add(e);
+
+        // Retunrn MSg
+        return new MQMsg(Params, SessionID, "ERR", Where);
     }
 }

@@ -111,7 +111,6 @@ public class MQMsg {
                 ", SessionID='" + SessionID + '\'' +
                 ", TransactionID='" + TransactionID + '\'' +
                 ", Cmd='" + Cmd + '\'' +
-                ", Result=" + Result +
                 '}';
     }
 }
