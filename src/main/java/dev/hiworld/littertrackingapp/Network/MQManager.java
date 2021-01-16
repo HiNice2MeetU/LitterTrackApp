@@ -32,6 +32,7 @@ public class MQManager {
     // Execute Single Command
     public synchronized String Execute(MQMsg Input) {
         // Test Data
+        // TODO remove test data
         NotifyObserver(new MQMsg(new ArrayList<Object>(),SessionID,"A","Test With Correct SESSION ID"));
         NotifyObserver(new MQMsg(new ArrayList<Object>(),"69","A","Test With InCorrect SESSION ID"));
         NotifyObserver(new MQMsg(new ArrayList<Object>(),SessionID,"6969","Test With InCorrect TRANSACTION ID"));
@@ -173,7 +174,11 @@ public class MQManager {
         }
     }
 
-    private MQMsg DecodeResult(String input){
+    public String EncodeResult(MQMsg Input){
+        return gson.fromJson(Input);
+    }
+
+    public MQMsg DecodeResult(String input){
         try {
             // Get Overall JSON Object
             JsonObject MainObj = JsonParser.parseString(input).getAsJsonObject();
@@ -261,4 +266,5 @@ public class MQManager {
         // Retunrn MSg
         return new MQMsg(Params, SessionID, "ERR", Where);
     }
+
 }

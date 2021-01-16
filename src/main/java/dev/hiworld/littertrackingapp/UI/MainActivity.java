@@ -59,7 +59,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         MQM.Execute(null);
 
-        // Json
+        // Log
+        Log.d("MQManager", "===============================================");
+
+        // Json Testing Serialization
+        ArrayList<Object>TestParam = new ArrayList<Object>();
+        TestParam.add("Hallo");
+        TestParam.add(69);
+        TestParam.add(new Event(6969,2323,"A"));
+        String RawJson = MQM.EncodeResult(new MQMsg(TestParam,SessionID,"A","JSoN TeStiNg"));
+        Log.d("MQManager", "Serialization: " + RawJson);
+
+        // Json testing deseriralization
+        MQMsg FromJSON = MQM.DecodeResult(RawJson);
+        Log.d("MQManager", "DeSerialization: " + RawJson);
     }
 
     @Override
