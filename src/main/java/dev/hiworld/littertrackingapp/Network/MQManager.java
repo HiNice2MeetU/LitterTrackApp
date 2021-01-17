@@ -143,54 +143,6 @@ public class MQManager {
         public void Error(MQMsg Error);
     }
 
-    // Start Network Thread
-    private void StartNet() {
-        // Create MqSession Object
-        MQSession Sesh = new MQSession(2,SessionID);
-
-        // Start Thread
-        Thread NetworkOutThread = new Thread(new MQThread(Sesh));
-        NetworkOutThread.setDaemon(true);
-        NetworkOutThread.setName("NetThread@" + SessionID);
-        NetworkOutThread.start();
-    }
-
-    // Class to be executed on different thread
-    class MQThread implements Runnable {
-        // Globals
-        MQSession Sesh;
-
-        // Constructor
-        public MQThread(MQSession sesh) {
-            Sesh = sesh;
-        }
-
-        // Main Func
-        public void run(){
-            // Execute
-            while (MQTRunning) {
-                synchronized (MQManager.this) {
-                    // Check if any commands in queue
-                    if (CommandQueue.size() > 0) {
-                        // Get Current Element
-                        //MQMsg = CommandQueue.removeFirst();
-
-                        // Serialize int Json
-
-                        // Send
-                    }
-
-                    // Sleep
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        Log.e("MQManager", e.toString() + " at ReadThread");
-                    }
-                }
-            }
-        }
-    }
-
     private String EncodeResult(MQMsg Input){
         Input.AutoFillType();
         return gson.toJson(Input);
