@@ -29,6 +29,8 @@ public class MQManager {
     // MQThread Kill Switch
     private static volatile boolean MQTRunning = true;
 
+    // ================ EXECUTES ================ //
+
     // Execute Single Command
     public synchronized String Execute(MQMsg Input) {
         // Test Data
@@ -64,6 +66,17 @@ public class MQManager {
         return null;
     }
 
+    // ================ OBSERVER ================ //
+
+    // Observer Interface
+    public interface MQListener {
+        // When new message comes in
+        public void Update(MQMsg Msg);
+
+        // When new error comes in
+        public void Error(MQMsg Error);
+    }
+
     // Add observers
     public void AddObserver(ArrayList<String> IDs, MQListener Listener) {
         // Create Main
@@ -96,58 +109,77 @@ public class MQManager {
         ListenerList.remove(Listener);
     }
 
-    // Notify Observer
+    // ================ CORE FUNCTIONS ================ //
+
+    // Notify Observer of msg
     public void NotifyObserver(MQMsg Msg){
         // Check if has the same session id
-        if (SessionID.equals(Msg.getSessionID())) {
-            // Iterate through list of observers
-            for (int i = 0; i<ListenerList.size();i++){
-                // Get Current
-                MQTracker Current = ListenerList.get(i);
 
-                // Get Msg ID
-                String TID = Msg.getTransactionID();
 
-                // Check if current id list has the Msg id
-                if (Current.getTransactionID().contains(TID)) {
-                    // Log
-                    Log.d("MQManager", "Found Match in Observer List to" + Msg.toString());
+        // Iterate through list
+        for(int i = 0; i<ListenerList.size();i++){
+            // Get values
+            MQTracker Current = ListenerList.get(i);
+            MQListener CL = Current.getListener();
+            ArrayList<String> TID = Current.getTransactionID();
 
-                    // Update Listeners
-                    Current.getListener().Update(Msg);
-
-                    // Log
-                    Log.d("MQManager", "Msg sent to observer " + TID);
-
-                } else if (TID.equals("ERR")) {
-                    // Update Listeners if is tagged with error
-                    Current.getListener().Error(Msg);
-
-                    // Log
-                    Log.d("MQManager", "Error Detected" + Msg.toString());
-
-                } else {
-                    // No match is found
-                    Log.d("MQManager", "Match Not found");
-                }
+            // Check if valid
+            switch (Validate(Msg,TID)) {
+                case ERR:
+                    // If is error
+                    CL.Error(Msg);
+                    break;
+                case YES:
+                    // If is valid
+                    CL.Update(Msg);
+                    break;
             }
         }
     }
 
-    // Observer Interface
-    public interface MQListener {
-        // When new message comes in
-        public void Update(MQMsg Msg);
+    public MsgType Validate(MQMsg Msg, ArrayList<String> InputTID){
+        if (SessionID.equals(Msg.getSessionID())) {
+            // Get Msg ID
+            String TID = Msg.getTransactionID();
 
-        // When new error comes in
-        public void Error(MQMsg Error);
+            // Check if current id list has the Msg id
+            if (InputTID.contains(TID)) {
+                // Log
+                Log.d("MQManager", "Found Match in Observer List to" + Msg.toString());
+                Log.d("MQManager", "Msg sent to observer " + TID);
+
+                // Return
+                return MsgType.YES;
+
+            } else if (TID.equals("ERR")) {
+                // Log
+                Log.d("MQManager", "Error Detected" + Msg.toString());
+
+                // Return
+                return MsgType.ERR;
+
+            } else {
+                // No match is found
+                Log.d("MQManager", "Match Not found");
+
+                // Return
+                return MsgType.NAY;
+            }
+
+        } else {
+            // Return
+            return MsgType.NAY;
+        }
+        //return null;
     }
 
+    // Turn MQMsg to JSON
     private String EncodeResult(MQMsg Input){
         Input.AutoFillType();
         return gson.toJson(Input);
     }
 
+    // Turn JSON to MQMsg
     private MQMsg DecodeResult(String input){
         try {
             // Get Overall JSON Object
@@ -228,7 +260,7 @@ public class MQManager {
         }
     }
 
-
+    // Make Error
     private MQMsg ErrorMaker(Exception e, String Where) {
         // Create Params
         ArrayList<Object> Params = new ArrayList<Object>();
@@ -239,5 +271,6 @@ public class MQManager {
         // Retunrn MSg
         return new MQMsg(Params, SessionID, "ERR", Where);
     }
+
 
 }
