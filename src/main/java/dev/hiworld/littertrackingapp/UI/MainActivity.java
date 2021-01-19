@@ -8,9 +8,17 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import dev.hiworld.littertrackingapp.Network.Event;
+import dev.hiworld.littertrackingapp.Network.MQAsyncClient;
 import dev.hiworld.littertrackingapp.Network.MQMsg;
 import dev.hiworld.littertrackingapp.Network.MQSession;
 import dev.hiworld.littertrackingapp.Network.MQManager;
@@ -19,7 +27,7 @@ import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
 import dev.hiworld.littertrackingapp.R;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,29 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ServerTransport ST = ServerTransport.getInstance();
         ST.Start();
 
-        // Send Thread
-        Thread NetworkOutThread = new Thread(new Test());
-        NetworkOutThread.setDaemon(true);
-        NetworkOutThread.setName("NetSecure");
-        NetworkOutThread.start();
-
         // Test MQManager
-        MQManager MQM = new MQManager();
-
-        MQM.AddObserver("A", new MQManager.MQListener() {
-            @Override
-            public void Update(MQMsg Msg) {
-                Log.d("MQManager", "Message Recieved at MainActivity: " + Msg.toString());
-            }
-
-            @Override
-            public void Error(MQMsg Error) {
-                Log.e("MQManager", "Error Recieved at MainActivity: " + Error.toString());
-                MQM.RemoveObserver(this);
-            }
-        });
-
-        MQM.Execute(null);
+        MQAsyncClient MQA = new MQAsyncClient();
     }
 
     @Override
@@ -76,30 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("Main", "Sucessfully opened Map App");
                 startActivity(t);
                 break;
-        }
-    }
-
-    class Test implements Runnable {
-        @Override
-        public void run() {
-            //ServerExecutor.SecureExecute();
-            MQSession Sesh = new MQSession(2);
-
-            // Execute
-            Sesh.Connect("tcp://192.168.6.133:1883");
-            Sesh.Publish("Hello Server");
-
-            // TODO Reove Test Code
-            Sesh.AddObserver(new MQSession.ResultListener() {
-                @Override
-                public void Update(String Msg) {
-                    Log.d("MainActivity", "Recieved: " + Msg);
-                }
-            });
-
-            while (true) {
-
-            }
         }
     }
 }

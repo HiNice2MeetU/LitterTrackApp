@@ -33,6 +33,10 @@ public class MQManager {
 
     // Execute Single Command
     public synchronized String Execute(MQMsg Input) {
+        return "A";
+    }
+
+    public void Test() {
         // Test Data
         // TODO remove test data
         NotifyObserver(new MQMsg(new ArrayList<Object>(),SessionID,"A","Test With Correct SESSION ID"));
@@ -57,8 +61,6 @@ public class MQManager {
         // Json testing deseriralization
         MQMsg FromJSON = DecodeResult(RawJson);
         Log.d("MQManager", "DeSerialization: " + FromJSON.toString());
-
-        return "A";
     }
 
     // Execute List of Commands
@@ -109,8 +111,6 @@ public class MQManager {
         ListenerList.remove(Listener);
     }
 
-    // ================ CORE FUNCTIONS ================ //
-
     // Notify Observer of msg
     public void NotifyObserver(MQMsg Msg){
         // Check if has the same session id
@@ -136,6 +136,8 @@ public class MQManager {
             }
         }
     }
+
+    // ================ CORE FUNCTIONS ================ //
 
     public MsgType Validate(MQMsg Msg, ArrayList<String> InputTID){
         if (SessionID.equals(Msg.getSessionID())) {
