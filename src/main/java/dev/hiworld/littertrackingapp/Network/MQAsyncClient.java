@@ -274,7 +274,7 @@ public class MQAsyncClient {
                         Log.e("ServerTransport", "There was an unexpected datatype: " + Current.toString() + " DATATYPE: " + ClassString);
 
                         // Throw Error
-                        throw (new NullPointerException());
+                        // throw (new NullPointerException());
                     }
                 }
             }
