@@ -19,6 +19,7 @@ import java.util.Arrays;
 
 import dev.hiworld.littertrackingapp.Network.Event;
 import dev.hiworld.littertrackingapp.Network.MQAsyncClient;
+import dev.hiworld.littertrackingapp.Network.MQAsyncManager;
 import dev.hiworld.littertrackingapp.Network.MQMsg;
 import dev.hiworld.littertrackingapp.Network.MQSession;
 import dev.hiworld.littertrackingapp.Network.MQManager;
@@ -27,7 +28,9 @@ import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
 import dev.hiworld.littertrackingapp.R;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MqttCallback{
+    // Test MQManager
+    MQAsyncManager MQS = new MQAsyncManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,34 +38,116 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // Get Button
-        Button Go2Camera = (Button) findViewById(R.id.CameraButton);
+        Button Go2Camera = findViewById(R.id.CameraButton);
         Go2Camera.setOnClickListener(this);
 
-        Button Go2Map = (Button) findViewById(R.id.MapButton);
+        Button Go2Map = findViewById(R.id.MapButton);
         Go2Map.setOnClickListener(this);
 
         ServerTransport ST = ServerTransport.getInstance();
         ST.Start();
 
-        // Test MQManager
-        MQAsyncClient MQA = new MQAsyncClient();
+        // Create Test Callback
+        IMqttActionListener ConnectCallback = new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d("MQAsyncClient","Connection Sucess!");
+                MQS.Next();
+            }
+
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.d("MQAsyncClient","Connection Failiure: " + exception.toString());
+                //MQS.Next();
+            }
+        };
+
+        IMqttActionListener PublishCallback = new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d("MQAsyncClient","Publish Sucess!");
+            }
+
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.d("MQAsyncClient","Publish Failiure: " + exception.toString());
+                //MQS.Next();
+            }
+        };
+
+        IMqttActionListener DisconnectCallback = new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d("MQAsyncClient","Disconnect Sucess!");
+                //MQS.Next();
+            }
+
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.d("MQAsyncClient","Disconnect Failiure: " + exception.toString());
+                //MQS.Next();
+            }
+        };
+
+        IMqttActionListener SubscribeCallback = new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d("MQAsyncClient","Subscribe Sucess!");
+                MQS.Next();
+            }
+
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.d("MQAsyncClient","Subscribe Failiure: " + exception.toString());
+                //MQS.Next();
+            }
+        };
+
+        MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),ConnectCallback);
+        MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), SubscribeCallback);
+        MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(69,69,"SixetyNine"), new Event(96,96,"NinetySix"))), "Ladida"), PublishCallback);
+        MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(69,69,"SixetyNine"), new Event(96,96,"NinetySix"))), "Disconnect"), DisconnectCallback);
+
+        MQS.Next();
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.CameraButton:
+                // Test TODO remove this
+                MQS.Next();
+
                 // Send to Camera Activity
                 Intent i = new Intent(this, CameraView.class);
                 Log.d("Main", "Sucessfully opened Camera App");
                 startActivity(i);
                 break;
             case R.id.MapButton:
+                // Test TODO remove this
+                MQS.Next();
+
                 // Send to Map Activity
                 Intent t = new Intent(this, Mapy2.class);
                 Log.d("Main", "Sucessfully opened Map App");
                 startActivity(t);
                 break;
         }
+    }
+
+    @Override
+    public void connectionLost(Throwable cause) {
+        Log.e("MQAsyncClient", "Lost Connection");
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        Log.d("MQAsyncClient", "Message Arrived@" + topic + ": " + message.toString());
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {
+
     }
 }

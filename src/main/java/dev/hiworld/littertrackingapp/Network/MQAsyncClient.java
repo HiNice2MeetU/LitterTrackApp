@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
@@ -43,31 +44,33 @@ public class MQAsyncClient {
         // Make Client
         try {
             MQAsync = new MqttAsyncClient(BrokerUri, SessionID, Persistence);
-        } catch (MqttException e) {
-            Log.d("MQAsyncClient", e.toString() + "@Connect");
-        }
 
-        // Set Callback
-        MQAsync.setCallback(RecieveCall);
+            // Set Callback
+            MQAsync.setCallback(RecieveCall);
 
-        // Make Connection Options
-        MqttConnectOptions MQConOptions = new MqttConnectOptions();
+            // Make Connection Options
+            MqttConnectOptions MQConOptions = new MqttConnectOptions();
 
-        // Set Connection Options
-        MQConOptions.setCleanSession(true);
-        MQAsync.setCallback(RecieveCall);
+            // Set Connection Options
+            MQConOptions.setCleanSession(true);
+            MQAsync.setCallback(RecieveCall);
 
-        // Connect MQAsync to server
-        try {
+            // Connect MQAsync to server
             MQAsync.connect(MQConOptions, null, SucessCall);
-        } catch (MqttException e) {
-            Log.d("MQAsyncClient", e.toString() + "@Connect");
-        }
 
-        // Detec if to automatically sub to recieve topic
-        if (AutoSub) {
-            // Subscribe to revieve topic
-            Subscribe(RecieveTopic, SucessCall);
+            if (AutoSub) {
+                // Sub
+                Subscribe(RecieveTopic, SucessCall);
+
+                // Log
+                Log.d("MQAsyncClient", "AutoSubbed to: " + RecieveTopic);
+            } else {
+                // Log
+                Log.d("MQAsyncClient", "Didn't autosub");
+            }
+
+        } catch (Exception e) {
+            Log.d("MQAsyncClient", e.toString() + "@Connect");
         }
     }
 
@@ -81,6 +84,9 @@ public class MQAsyncClient {
             } else {
                 // If MqAsync isnt connected
                 SucessCall.onFailure(new MqttToken(), new NullPointerException());
+
+                // Log
+                Log.e("MQAsyncClient", "No Connection " + "@Disconnect");
             }
         } catch (Exception e) {
             // Log
@@ -101,6 +107,9 @@ public class MQAsyncClient {
             } else {
                 // If MqAsync isnt connected
                 SucessCall.onFailure(new MqttToken(), new NullPointerException());
+
+                // Log
+                Log.e("MQAsyncClient", "No Connection " + "@Disconnect");
             }
         } catch (Exception e) {
             // Log
@@ -128,6 +137,9 @@ public class MQAsyncClient {
             } else {
                 // If MqAsync isnt connected
                 SucessCall.onFailure(new MqttToken(), new NullPointerException());
+
+                // Log
+                Log.e("MQAsyncClient", "No Connection " + "@Publish");
             }
 
         } catch (Exception e) {
@@ -149,16 +161,40 @@ public class MQAsyncClient {
             // Set params
             Msg.setPayload(EncodeResult(Content).getBytes());
 
+            // Log
+            Log.d("MQAsyncClient", "Publishing: " + new String(Msg.getPayload(), StandardCharsets.UTF_8));
+
             // Publish
             if (MQAsync.isConnected()) {
                 // If mqasync is connected
                 MQAsync.publish(SendTopic, Msg);
+
+                SucessCall.onSuccess(new MqttToken());
             } else {
                 // If MqAsync isnt connected
                 SucessCall.onFailure(new MqttToken(), new NullPointerException());
+
+                // Log
+                Log.e("MQAsyncClient", "No Connection " + "@Publish");
             }
         } catch (Exception e) {
             Log.e("MQAsyncClient", e.toString()+"@" + "Publish");
+
+            // Notify listener
+            SucessCall.onFailure(new MqttToken(), e);
+        }
+    }
+
+    // Subscribe with default qos and default topic
+    public void Subscribe(IMqttActionListener SucessCall) {
+        // Subscribe
+        try {
+            // Subscribe
+            MQAsync.subscribe(RecieveTopic, DefaultQOS);
+
+            SucessCall.onSuccess(new MqttToken());
+        } catch (Exception e) {
+            Log.e("MQAsyncClient", e.toString()+"@" + "Subscribe");
 
             // Notify listener
             SucessCall.onFailure(new MqttToken(), e);
@@ -169,14 +205,10 @@ public class MQAsyncClient {
     public void Subscribe(String Topic, IMqttActionListener SucessCall) {
         // Subscribe
         try {
-            // Publish
-            if (MQAsync.isConnected()) {
-                // If mqasync is connected
-                MQAsync.subscribe(Topic, DefaultQOS);
-            } else {
-                // If MqAsync isnt connected
-                SucessCall.onFailure(new MqttToken(), new NullPointerException());
-            }
+            // Subscribe
+            MQAsync.subscribe(Topic, DefaultQOS);
+
+            SucessCall.onSuccess(new MqttToken());
         } catch (Exception e) {
             Log.e("MQAsyncClient", e.toString()+"@" + "Subscribe");
 
@@ -190,14 +222,11 @@ public class MQAsyncClient {
         // Subscribe
         try {
             // Publish
-            if (MQAsync.isConnected()) {
-                // If mqasync is connected
-                MQAsync.subscribe(Topic, QOS);
-            } else {
-                // If MqAsync isnt connected
-                SucessCall.onFailure(new MqttToken(), new NullPointerException());
-            }
+            MQAsync.subscribe(Topic, QOS);
+
+            SucessCall.onSuccess(new MqttToken());
         } catch (Exception e) {
+            // Log
             Log.e("MQAsyncClient", e.toString()+"@" + "Subscribe");
 
             // Notify listener
@@ -291,8 +320,8 @@ public class MQAsyncClient {
     }
 
     // Validate Msg from list of transaction ids
-    public MsgType Validate(MQMsg Msg, ArrayList<String> InputTID) {
-        if (SessionID.equals(Msg.getSessionID())) {
+    public static MsgType Validate(MQMsg Msg, ArrayList<String> InputTID, String SeshID) {
+        if (SeshID.equals(Msg.getSessionID())) {
             // Get Msg ID
             String TID = Msg.getTransactionID();
 
@@ -328,8 +357,8 @@ public class MQAsyncClient {
     }
 
     // Validate Msg from single transaction id
-    public MsgType Validate(MQMsg Msg, String InputTID) {
-        if (SessionID.equals(Msg.getSessionID())) {
+    public static MsgType Validate(MQMsg Msg, String InputTID, String SeshID) {
+        if (SeshID.equals(Msg.getSessionID())) {
             // Get Msg ID
             String TID = Msg.getTransactionID();
 
@@ -363,4 +392,6 @@ public class MQAsyncClient {
         }
         //return null;
     }
+
+
 }
