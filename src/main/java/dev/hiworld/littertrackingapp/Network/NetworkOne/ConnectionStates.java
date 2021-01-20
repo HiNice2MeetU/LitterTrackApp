@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.Network.OldNetwork;
+package dev.hiworld.littertrackingapp.Network.NetworkOne;
 
 public enum ConnectionStates {
     CONNECTED,

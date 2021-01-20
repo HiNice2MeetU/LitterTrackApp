@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LitterTrackingApp">
-        <activity android:name=".UI.EventMeta2"></activity>
+        <activity android:name=".UI.UITwo.EventMeta2"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -34,7 +34,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".UI.Mapy2"
+            android:name=".UI.UITwo.Mapy2"
             android:label="@string/title_activity_mapy2" />
 
         <meta-data
@@ -42,7 +42,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".UI.CameraView" />
-        <activity android:name=".UI.MainActivity">
+        <activity android:name=".UI.UITwo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

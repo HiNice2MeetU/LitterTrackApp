@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.Network;
+package dev.hiworld.littertrackingapp.Network.NetworkTwo;
 
 import android.util.Log;
 
@@ -13,7 +13,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import dev.hiworld.littertrackingapp.Network.OldNetwork.SocketResultSet;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQSession implements IMqttMessageListener {
@@ -121,7 +120,7 @@ public class MQSession implements IMqttMessageListener {
             Message.setQos(Qos);
 
             // TODO Set Retained to true at launch
-            Message.setRetained(true);
+            Message.setRetained(false);
 
             // Public / Log
             MqttClient.publish(Topic, Message);
@@ -150,7 +149,7 @@ public class MQSession implements IMqttMessageListener {
             Message.setQos(Qos);
 
             // TODO Set Retained to true at launch
-            Message.setRetained(true);
+            Message.setRetained(false);
 
             // Public / Log
             MqttClient.publish(SendTopic, Message);

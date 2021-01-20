@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.Network;
+package dev.hiworld.littertrackingapp.Network.NetworkTwo;
 
 import android.util.Log;
 
@@ -9,6 +9,10 @@ import java.util.LinkedList;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+import dev.hiworld.littertrackingapp.Network.Event;
+import dev.hiworld.littertrackingapp.Network.MQMsg;
+import dev.hiworld.littertrackingapp.Network.MQTracker;
+import dev.hiworld.littertrackingapp.Network.MsgType;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQManager {
@@ -97,7 +101,7 @@ public class MQManager {
         MQTracker Main = new MQTracker(Listener);
 
         // Add to id list
-        Main.TransactionID.add(ID);
+        Main.getTransactionID().add(ID);
 
         // Add to list
         ListenerList.add(Main);

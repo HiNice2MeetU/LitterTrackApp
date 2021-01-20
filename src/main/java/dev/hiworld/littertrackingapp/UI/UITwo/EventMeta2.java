@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.UI;
+package dev.hiworld.littertrackingapp.UI.UITwo;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,10 +27,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import dev.hiworld.littertrackingapp.Network.Event;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerScheduler;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.SocketResultSet;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerScheduler;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerTransport;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.SocketResultSet;
 import dev.hiworld.littertrackingapp.R;
+import dev.hiworld.littertrackingapp.UI.CameraView;
 import dev.hiworld.littertrackingapp.Utility.BMPCache;
 import dev.hiworld.littertrackingapp.Utility.PrivOBJ;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;

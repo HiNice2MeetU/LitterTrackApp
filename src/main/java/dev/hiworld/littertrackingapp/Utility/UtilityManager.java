@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import dev.hiworld.littertrackingapp.UI.MainActivity;
+import dev.hiworld.littertrackingapp.UI.UITwo.MainActivity;
 import kotlin.jvm.internal.Intrinsics;
 
 public class UtilityManager {

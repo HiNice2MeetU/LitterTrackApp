@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.Network.OldNetwork;
+package dev.hiworld.littertrackingapp.Network.NetworkOne;
 
 import android.util.Log;
 
@@ -66,7 +66,7 @@ public class ServerTransport {
             ArrayList TempList = new ArrayList();
 
             // Iterate through Jparay
-            if (JayObj != null && JParay != null) {
+            if (JParay != null) {
                 // if neither are null
                 for (int i = 0; i < JParay.size(); i++) {
                     // Get Current

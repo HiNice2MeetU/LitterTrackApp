@@ -2,6 +2,8 @@ package dev.hiworld.littertrackingapp.Network;
 
 import java.util.ArrayList;
 
+import dev.hiworld.littertrackingapp.Network.NetworkTwo.MQManager;
+
 public class MQTracker {
     // Globals
     protected ArrayList<String> TransactionID;

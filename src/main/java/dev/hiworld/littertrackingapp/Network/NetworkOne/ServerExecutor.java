@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.Network.OldNetwork;
+package dev.hiworld.littertrackingapp.Network.NetworkOne;
 
 import android.util.Log;
 
@@ -14,15 +14,9 @@ import java.net.Socket;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.security.KeyStore;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.SSLParameters;
 
 

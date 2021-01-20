@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.Network.OldNetwork;
+package dev.hiworld.littertrackingapp.Network.NetworkOne;
 
 import java.util.ArrayList;
 import java.util.Timer;

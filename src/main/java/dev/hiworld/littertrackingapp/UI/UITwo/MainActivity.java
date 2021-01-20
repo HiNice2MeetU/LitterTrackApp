@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.UI;
+package dev.hiworld.littertrackingapp.UI.UITwo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,13 +21,10 @@ import dev.hiworld.littertrackingapp.Network.Event;
 import dev.hiworld.littertrackingapp.Network.MQAsyncClient;
 import dev.hiworld.littertrackingapp.Network.MQAsyncManager;
 import dev.hiworld.littertrackingapp.Network.MQMsg;
-import dev.hiworld.littertrackingapp.Network.MQSession;
-import dev.hiworld.littertrackingapp.Network.MQManager;
 import dev.hiworld.littertrackingapp.Network.MsgType;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerTransport;
 import dev.hiworld.littertrackingapp.R;
-import dev.hiworld.littertrackingapp.Utility.UtilityManager;
+import dev.hiworld.littertrackingapp.UI.CameraView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MqttCallback{
     // Test MQManager

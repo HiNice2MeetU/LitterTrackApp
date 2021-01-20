@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.UI;
+package dev.hiworld.littertrackingapp.UI.UITwo;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import dev.hiworld.littertrackingapp.Network.Event;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerScheduler;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
-import dev.hiworld.littertrackingapp.Network.OldNetwork.SocketResultSet;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerScheduler;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerTransport;
+import dev.hiworld.littertrackingapp.Network.NetworkOne.SocketResultSet;
 import dev.hiworld.littertrackingapp.R;
 import dev.hiworld.littertrackingapp.Utility.TrashConA;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
@@ -123,7 +123,7 @@ public class Mapy2 extends FragmentActivity implements OnMapReadyCallback {
                 String Bmp = CEvent.getBmp();
 
                 try {
-                    if (Bmp != null || Bmp != "A") {
+                    if (Bmp != null) {
                         CInfoWin.setBmp(UM.FromBase64(Bmp));
                     }
                 } catch (IllegalArgumentException e) {
