@@ -37,6 +37,9 @@ public class MQAsyncManager {
         // Set transaciton id
         Input.setTransactionID(TansactionID);
 
+        // Set session id
+        Input.setSessionID(SessionID);
+
         // Add to list
         MsgQueue.addLast(new MQListMsg(SucessCall, Input));
 

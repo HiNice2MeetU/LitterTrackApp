@@ -23,6 +23,7 @@ import dev.hiworld.littertrackingapp.Network.MQAsyncManager;
 import dev.hiworld.littertrackingapp.Network.MQMsg;
 import dev.hiworld.littertrackingapp.Network.MQSession;
 import dev.hiworld.littertrackingapp.Network.MQManager;
+import dev.hiworld.littertrackingapp.Network.MsgType;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerTransport;
 import dev.hiworld.littertrackingapp.Network.OldNetwork.ServerExecutor;
 import dev.hiworld.littertrackingapp.R;
@@ -31,6 +32,7 @@ import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MqttCallback{
     // Test MQManager
     MQAsyncManager MQS = new MQAsyncManager();
+    String PublishID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),ConnectCallback);
         MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), SubscribeCallback);
-        MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(69,69,"SixetyNine"), new Event(96,96,"NinetySix"))), "Ladida"), PublishCallback);
+        PublishID = MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(69,69,"SixetyNine"), new Event(96,96,"NinetySix"))), "Ladida"), PublishCallback);
         MQS.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(69,69,"SixetyNine"), new Event(96,96,"NinetySix"))), "Disconnect"), DisconnectCallback);
 
         MQS.Next();
@@ -143,7 +145,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
-        Log.d("MQAsyncClient", "Message Arrived@" + topic + ": " + message.toString());
+        // Decode the json into MqMsg
+        MQMsg FormattedMsg = MQAsyncClient.DecodeResult(message.toString());
+
+        // Check if msg isnt null
+        if (FormattedMsg!=null) {
+            // Chck if msg is valid
+            if (MQAsyncClient.Validate(FormattedMsg, PublishID, MQS.getSessionID()) == MsgType.YES) {
+                // Log
+                Log.d("MQAsyncClient", "Raw Message Arrived@" + topic + ": " + message.toString());
+                Log.d("MQAsyncClient", "Formatted Message Arrived@" + topic + ": " + FormattedMsg.toString());
+            }
+        } else {
+            // Log a null formatted msg
+            Log.e("MQAsyncClient", "FormattedMsg == null");
+        }
     }
 
     @Override

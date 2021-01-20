@@ -24,7 +24,7 @@ public class MQAsyncClient {
     private MqttAsyncClient MQAsync;
     private MemoryPersistence Persistence = new MemoryPersistence();
     private String SessionID;
-    private Gson gson = new Gson();
+    private static Gson gson = new Gson();
     private String SendTopic = "Client";
     private String RecieveTopic = "Server";
     private long DefaultDisTimeout = 1000;
@@ -235,13 +235,13 @@ public class MQAsyncClient {
     }
 
     // Turn MQMsg to JSON
-    private String EncodeResult(MQMsg Input) {
+    public static String EncodeResult(MQMsg Input) {
         Input.AutoFillType();
         return gson.toJson(Input);
     }
 
     // Turn JSON to MQMsg
-    private MQMsg DecodeResult(String input) {
+    public static MQMsg DecodeResult(String input) {
         try {
             // Get Overall JSON Object
             JsonObject MainObj = JsonParser.parseString(input).getAsJsonObject();
