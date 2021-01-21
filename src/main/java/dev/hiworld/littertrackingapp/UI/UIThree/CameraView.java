@@ -1,4 +1,4 @@
-package dev.hiworld.littertrackingapp.UI;
+package dev.hiworld.littertrackingapp.UI.UIThree;
 
 import android.Manifest;
 import android.content.Intent;

@@ -24,7 +24,7 @@ import dev.hiworld.littertrackingapp.Network.MQMsg;
 import dev.hiworld.littertrackingapp.Network.MsgType;
 import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerTransport;
 import dev.hiworld.littertrackingapp.R;
-import dev.hiworld.littertrackingapp.UI.CameraView;
+import dev.hiworld.littertrackingapp.UI.UIThree.CameraView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MqttCallback{
     // Test MQManager

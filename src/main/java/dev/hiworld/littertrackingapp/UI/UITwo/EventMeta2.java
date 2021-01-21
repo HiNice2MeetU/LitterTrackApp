@@ -31,7 +31,7 @@ import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerScheduler;
 import dev.hiworld.littertrackingapp.Network.NetworkOne.ServerTransport;
 import dev.hiworld.littertrackingapp.Network.NetworkOne.SocketResultSet;
 import dev.hiworld.littertrackingapp.R;
-import dev.hiworld.littertrackingapp.UI.CameraView;
+import dev.hiworld.littertrackingapp.UI.UIThree.CameraView;
 import dev.hiworld.littertrackingapp.Utility.BMPCache;
 import dev.hiworld.littertrackingapp.Utility.PrivOBJ;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
