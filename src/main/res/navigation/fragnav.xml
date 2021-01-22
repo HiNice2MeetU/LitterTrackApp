@@ -7,13 +7,19 @@
 
     <action
         android:id="@+id/action_global_to_settings"
-        app:destination="@id/settingsFrag" />
+        app:destination="@id/settingsFrag"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
     <action
         android:id="@+id/action_global_to_cameraView"
-        app:destination="@id/cameraView" />
+        app:destination="@id/cameraView"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
     <action
         android:id="@+id/action_global_to_home"
-        app:destination="@id/mappyFrag" />
+        app:destination="@id/mappyFrag"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
 
     <activity
         android:id="@+id/cameraView"
@@ -24,30 +30,9 @@
         android:id="@+id/mappyFrag"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.MappyFrag"
         android:label="fragment_mappy"
-        tools:layout="@layout/fragment_mappy" >
-        <action
-            android:id="@+id/action_mappyFrag_to_camnav2"
-            app:destination="@id/camnav" />
-    </fragment>
+        tools:layout="@layout/fragment_mappy" />
     <fragment
         android:id="@+id/settingsFrag"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.SettingsFrag"
         android:label="SettingsFrag" />
-    <navigation android:id="@+id/camnav"
-        app:startDestination="@id/cameraFrag">
-        <fragment
-            android:id="@+id/testFragment2"
-            android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment2"
-            android:label="fragment_test2"
-            tools:layout="@layout/fragment_test2" />
-        <fragment
-            android:id="@+id/cameraFrag"
-            android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraFragments.CameraFrag"
-            android:label="fragment_camera"
-            tools:layout="@layout/fragment_camera">
-            <action
-                android:id="@+id/action_cameraFrag_to_testFragment2"
-                app:destination="@id/testFragment2" />
-        </fragment>
-    </navigation>
 </navigation>

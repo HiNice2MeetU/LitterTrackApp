@@ -3,16 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/camnav"
-    app:startDestination="@id/cameraFrag2">
+    app:startDestination="@id/cameraFrag">
 
     <fragment
-        android:id="@+id/cameraFrag2"
+        android:id="@+id/cameraFrag"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraFragments.CameraFrag"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
         <action
-            android:id="@+id/action_cameraFrag2_to_camAcceptance"
-            app:destination="@id/camAcceptance" />
+            android:id="@+id/action_cameraFrag_to_camAcceptance"
+            app:destination="@id/camAcceptance"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_cameraFrag_to_homeActvity"
+            app:destination="@id/homeActvity" />
     </fragment>
     <fragment
         android:id="@+id/camAcceptance"
@@ -20,11 +25,15 @@
         android:label="fragment_cam_acceptance"
         tools:layout="@layout/fragment_cam_acceptance" >
         <action
-            android:id="@+id/action_camAcceptance_to_cameraFrag2"
-            app:destination="@id/cameraFrag2" />
+            android:id="@+id/action_camAcceptance_to_homeActvity2"
+            app:destination="@id/homeActvity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
         <action
-            android:id="@+id/action_camAcceptance_to_homeActvity"
-            app:destination="@id/homeActvity" />
+            android:id="@+id/action_camAcceptance_to_cameraFrag"
+            app:destination="@id/cameraFrag"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
     <activity
         android:id="@+id/homeActvity"
