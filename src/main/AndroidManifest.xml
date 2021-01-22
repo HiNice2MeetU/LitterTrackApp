@@ -23,7 +23,6 @@
         <activity android:name=".UI.UIThree.HomeActvity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,11 +49,6 @@
 
         <activity android:name=".UI.UIThree.CameraView" />
         <activity android:name=".UI.UITwo.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

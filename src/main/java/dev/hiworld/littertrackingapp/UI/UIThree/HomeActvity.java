@@ -38,21 +38,36 @@ public class HomeActvity extends AppCompatActivity {
                 // Get nav
                 NavController NavControl = Navigation.findNavController(findViewById(R.id.Frag));
 
+                // Get Current Destination Name
                 String CurrentDest = NavControl.getCurrentDestination().getLabel().toString();
+
+                // Navigate to home
+
 
                 // Switch Statement to determine what to do
                 switch (ItemID) {
                     case "Camera":
-                        // If Camera is selected
+                        // If Camera is selected move to camera actvity
+                        if (!CurrentDest.equals("activity_camera")) {
+                            NavControl.navigate(R.id.action_global_to_cameraView);
+                            Log.d("HomeActivity", "on destination: " + CurrentDest);
+                        } else {
+                            Log.e("HomeActivity", "Already on destination: " + CurrentDest);
+                        }
                         break;
                     case "Map":
                         // If Map is selected
+                        if (!CurrentDest.equals("activity_camera")) {
+                            NavControl.navigate(R.id.action_global_to_home);
+                            Log.d("HomeActivity", "on destination: " + CurrentDest);
+                        } else {
+                            Log.e("HomeActivity", "Already on destination: " + CurrentDest);
+                        }
                         break;
                     case "Settings":
                         // If Settings is selected navigate to settings
                         if (!CurrentDest.equals("fragment_test2")) {
-                            NavDirections Action = TestFragmentDirections.actionTestFragmentToTestFragment2();
-                            NavControl.navigate(Action);
+                            NavControl.navigate(R.id.action_global_to_testFragment2);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
                             Log.e("HomeActivity", "Already on destination: " + CurrentDest);

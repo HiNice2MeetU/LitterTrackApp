@@ -5,18 +5,37 @@
     android:id="@+id/fragnav"
     app:startDestination="@id/testFragment">
 
+    <action
+        android:id="@+id/action_global_to_testFragment2"
+        app:destination="@id/testFragment2"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    <action
+        android:id="@+id/action_global_to_cameraView"
+        app:destination="@id/cameraView" />
+    <action
+        android:id="@+id/action_global_to_home"
+        app:destination="@id/testFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     <fragment
         android:id="@+id/testFragment"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment"
         android:label="fragment_test"
-        tools:layout="@layout/fragment_test" >
-        <action
-            android:id="@+id/action_testFragment_to_testFragment2"
-            app:destination="@id/testFragment2" />
-    </fragment>
+        tools:layout="@layout/fragment_test" />
     <fragment
         android:id="@+id/testFragment2"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment2"
         android:label="fragment_test2"
         tools:layout="@layout/fragment_test2" />
+    <activity
+        android:id="@+id/cameraView"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraView"
+        android:label="activity_camera"
+        tools:layout="@layout/activity_camera" />
 </navigation>
