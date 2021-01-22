@@ -20,4 +20,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="info_permission_camera">The camera permission are needed to use the application</string>
+    <string name="info_permission_failed">Permisson Denied, Permissions are required to use this feature</string>
+    <string name="info_permission_external_storage">The WRITE_EXTERNAL_STORAGE permission is needed to use the app</string>
 </resources>

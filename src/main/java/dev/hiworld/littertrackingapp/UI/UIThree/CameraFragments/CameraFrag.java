@@ -1,63 +1,44 @@
 package dev.hiworld.littertrackingapp.UI.UIThree.CameraFragments;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 
 import dev.hiworld.littertrackingapp.R;
-import dev.hiworld.littertrackingapp.UI.UITwo.EventMeta2;
-import dev.hiworld.littertrackingapp.Utility.BMPCache;
-import dev.hiworld.littertrackingapp.Utility.UtilityManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import dev.hiworld.littertrackingapp.R;
 
 
-public class CameraFrag extends Fragment implements View.OnClickListener {
+public class CameraFrag extends Fragment {
 
-    public CameraFrag() {
-        // Required empty public constructor
-    }
+    // Globals
+    private View InflatedView;
+    private ListenableFuture<ProcessCameraProvider> CameraProviderFuture;
 
-    public static CameraFrag newInstance(String param1, String param2) {
-        CameraFrag fragment = new CameraFrag();
-        return fragment;
+    public CameraFrag(){
+
     }
 
     @Override
@@ -70,10 +51,111 @@ public class CameraFrag extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View InflatedView = inflater.inflate(R.layout.fragment_camera, container, false);
+        InflatedView = inflater.inflate(R.layout.fragment_camera, container, false);
+
+        // Init priv and cam
+        InitPriv();
 
         // Return View
         return InflatedView;
     }
 
+    // Check privs then init cam
+    public void InitPriv() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            // Init Camera
+            InitCamera();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), "Manifest.permission.CAMERA") == true) {
+            // Notify User
+            Toast.makeText(getActivity(), getString(R.string.info_permission_camera), Toast.LENGTH_SHORT);
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), "Manifest.permission.WRITE_EXTERNAL_STORAGE") == true) {
+            // Notify User
+            Toast.makeText(getActivity(), getString(R.string.info_permission_external_storage), Toast.LENGTH_SHORT);
+        } else {
+            // If Privs aren't givient
+            requestPermissions(new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 69);
+        }
+
+    }
+
+    public void BindPreview(ProcessCameraProvider CameraProvider) {
+
+        // Get preview view
+        PreviewView PreviewV = InflatedView.findViewById(R.id.previewView);
+
+        // Create Preview
+        Preview preview = new Preview.Builder().build();
+
+        // Select the back camera
+        CameraSelector CamSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
+
+        // Set surface provider
+        preview.setSurfaceProvider(PreviewV.getSurfaceProvider());
+
+        // Bind
+        Camera Camera = CameraProvider.bindToLifecycle((LifecycleOwner)this, CamSelector, preview);
+    }
+
+
+    // Initialize Cam
+    public void InitCamera() {
+        // Get Camera Provider
+        CameraProviderFuture = ProcessCameraProvider.getInstance(getActivity());
+
+        // Check for availability
+        CameraProviderFuture.addListener(() -> {
+            try {
+                // Get Provider
+                ProcessCameraProvider CamProvider = CameraProviderFuture.get();
+
+                // Unbind
+                CamProvider.unbindAll();
+
+                // Bind Preview
+                BindPreview(CamProvider);
+
+            } catch (ExecutionException | InterruptedException e) {
+                // If any errors occur
+                Log.e("CameraFrag", "Something Went Wrong");
+            }
+        },ContextCompat.getMainExecutor(getActivity()));
+    }
+
+    // On permission result
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 69:
+                // Request for write external and cam
+                if (grantResults.length > 1 && CheckGrantResults(grantResults)) {
+                    // If priv is granted
+                    InitCamera();
+
+                    // Log
+                    Log.d("CameraFrag", "Priv is granted");
+                    Log.d("CameraFrag", "GrantResults = " + Arrays.toString(grantResults));
+                } else {
+                    // If priv isnt granted
+                    NavDirections action = CameraFragDirections.actionCameraFragToHomeActvity();
+                    Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
+
+
+                    // Log
+                    Log.d("CameraFrag", "Priv is not granted");
+                    Log.d("CameraFrag", "GrantResults = " + grantResults.toString());
+                }
+
+                return;
+        }
+    }
+
+    public boolean CheckGrantResults(int[] GrantResults){
+        for (int Current:GrantResults) {
+            if (Current == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 }
