@@ -3,39 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragnav"
-    app:startDestination="@id/testFragment">
+    app:startDestination="@id/mappyFrag">
 
     <action
-        android:id="@+id/action_global_to_testFragment2"
-        app:destination="@id/testFragment2"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        android:id="@+id/action_global_to_settings"
+        app:destination="@id/settingsFrag" />
     <action
         android:id="@+id/action_global_to_cameraView"
         app:destination="@id/cameraView" />
     <action
         android:id="@+id/action_global_to_home"
-        app:destination="@id/testFragment"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim"
-        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        app:destination="@id/mappyFrag" />
 
-    <fragment
-        android:id="@+id/testFragment"
-        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment"
-        android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
-    <fragment
-        android:id="@+id/testFragment2"
-        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment2"
-        android:label="fragment_test2"
-        tools:layout="@layout/fragment_test2" />
     <activity
         android:id="@+id/cameraView"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraView"
         android:label="activity_camera"
         tools:layout="@layout/activity_camera" />
+    <fragment
+        android:id="@+id/mappyFrag"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.MappyFrag"
+        android:label="fragment_mappy"
+        tools:layout="@layout/fragment_mappy" >
+        <action
+            android:id="@+id/action_mappyFrag_to_camnav2"
+            app:destination="@id/camnav" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFrag"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.SettingsFrag"
+        android:label="SettingsFrag" />
+    <navigation android:id="@+id/camnav"
+        app:startDestination="@id/cameraFrag">
+        <fragment
+            android:id="@+id/testFragment2"
+            android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment2"
+            android:label="fragment_test2"
+            tools:layout="@layout/fragment_test2" />
+        <fragment
+            android:id="@+id/cameraFrag"
+            android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraFragments.CameraFrag"
+            android:label="fragment_camera"
+            tools:layout="@layout/fragment_camera">
+            <action
+                android:id="@+id/action_cameraFrag_to_testFragment2"
+                app:destination="@id/testFragment2" />
+        </fragment>
+    </navigation>
 </navigation>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/camnav"
+    app:startDestination="@id/cameraFrag2">
+
+    <fragment
+        android:id="@+id/cameraFrag2"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraFragments.CameraFrag"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFrag2_to_testFragment22"
+            app:destination="@id/testFragment22" />
+    </fragment>
+    <fragment
+        android:id="@+id/testFragment22"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment2"
+        android:label="fragment_test2"
+        tools:layout="@layout/fragment_test2" />
+</navigation>

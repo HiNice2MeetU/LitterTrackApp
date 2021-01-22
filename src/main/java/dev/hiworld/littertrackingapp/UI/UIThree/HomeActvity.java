@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dev.hiworld.littertrackingapp.R;
-import dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragmentDirections;
 
 public class HomeActvity extends AppCompatActivity {
 
@@ -48,7 +47,7 @@ public class HomeActvity extends AppCompatActivity {
                 switch (ItemID) {
                     case "Camera":
                         // If Camera is selected move to camera actvity
-                        if (!CurrentDest.equals("activity_camera")) {
+                        if (!CurrentDest.equals("se")) {
                             NavControl.navigate(R.id.action_global_to_cameraView);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
@@ -57,7 +56,7 @@ public class HomeActvity extends AppCompatActivity {
                         break;
                     case "Map":
                         // If Map is selected
-                        if (!CurrentDest.equals("activity_camera")) {
+                        if (!CurrentDest.equals("fragment_mappy")) {
                             NavControl.navigate(R.id.action_global_to_home);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
@@ -66,8 +65,8 @@ public class HomeActvity extends AppCompatActivity {
                         break;
                     case "Settings":
                         // If Settings is selected navigate to settings
-                        if (!CurrentDest.equals("fragment_test2")) {
-                            NavControl.navigate(R.id.action_global_to_testFragment2);
+                        if (!CurrentDest.equals("SettingsFrag")) {
+                            NavControl.navigate(R.id.action_global_to_settings);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
                             Log.e("HomeActivity", "Already on destination: " + CurrentDest);
