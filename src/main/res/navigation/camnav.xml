@@ -11,12 +11,24 @@
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
         <action
-            android:id="@+id/action_cameraFrag2_to_testFragment22"
-            app:destination="@id/testFragment22" />
+            android:id="@+id/action_cameraFrag2_to_camAcceptance"
+            app:destination="@id/camAcceptance" />
     </fragment>
     <fragment
-        android:id="@+id/testFragment22"
-        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.TestFragment2"
-        android:label="fragment_test2"
-        tools:layout="@layout/fragment_test2" />
+        android:id="@+id/camAcceptance"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.CameraFragments.CamAcceptance"
+        android:label="fragment_cam_acceptance"
+        tools:layout="@layout/fragment_cam_acceptance" >
+        <action
+            android:id="@+id/action_camAcceptance_to_cameraFrag2"
+            app:destination="@id/cameraFrag2" />
+        <action
+            android:id="@+id/action_camAcceptance_to_homeActvity"
+            app:destination="@id/homeActvity" />
+    </fragment>
+    <activity
+        android:id="@+id/homeActvity"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeActvity"
+        android:label="activity_home_actvity"
+        tools:layout="@layout/activity_home_actvity" />
 </navigation>
