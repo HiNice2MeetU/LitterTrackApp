@@ -17,7 +17,12 @@
             app:exitAnim="@anim/nav_default_exit_anim" />
         <action
             android:id="@+id/action_cameraFrag_to_homeActvity"
-            app:destination="@id/homeActvity" />
+            app:destination="@id/homeActvity"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_cameraFrag_self"
+            app:destination="@id/cameraFrag" />
     </fragment>
     <fragment
         android:id="@+id/camAcceptance"

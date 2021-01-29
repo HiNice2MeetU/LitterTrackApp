@@ -10,11 +10,16 @@ import android.widget.Toast;
 
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -22,8 +27,11 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import dev.hiworld.littertrackingapp.R;
+import dev.hiworld.littertrackingapp.Utility.BMPCache;
+import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -36,6 +44,11 @@ public class CameraFrag extends Fragment {
     // Globals
     private View InflatedView;
     private ListenableFuture<ProcessCameraProvider> CameraProviderFuture;
+    private BMPCache BitCase = new BMPCache();
+    private int PictureQuality = 10;
+    private int PictureSizeX = 200;
+    private int PictureSizeY = 200;
+    private ImageCapture imageCapture;
 
     public CameraFrag(){
 
@@ -55,6 +68,14 @@ public class CameraFrag extends Fragment {
 
         // Init priv and cam
         InitPriv();
+
+        // Add Listener to take pic button
+        InflatedView.findViewById(R.id.TakeIMG).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TakePhoto();
+            }
+        });
 
         // Return View
         return InflatedView;
@@ -92,8 +113,15 @@ public class CameraFrag extends Fragment {
         // Set surface provider
         preview.setSurfaceProvider(PreviewV.getSurfaceProvider());
 
+        // Set image capture
+        imageCapture =
+                new ImageCapture.Builder()
+                        .setTargetRotation(InflatedView.getDisplay().getRotation())
+                        .build();
+
+
         // Bind
-        Camera Camera = CameraProvider.bindToLifecycle((LifecycleOwner)this, CamSelector, preview);
+        Camera Camera = CameraProvider.bindToLifecycle((LifecycleOwner)this, CamSelector,imageCapture, preview);
     }
 
 
@@ -133,8 +161,12 @@ public class CameraFrag extends Fragment {
                     // Log
                     Log.d("CameraFrag", "Priv is granted");
                     Log.d("CameraFrag", "GrantResults = " + Arrays.toString(grantResults));
+
+                    // Restart Fragment
+                    NavDirections action = CameraFragDirections.actionCameraFragSelf();
+                    Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
                 } else {
-                    // If priv isnt granted
+                    // If priv isnt granted go back to map
                     NavDirections action = CameraFragDirections.actionCameraFragToHomeActvity();
                     Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
 
@@ -157,5 +189,44 @@ public class CameraFrag extends Fragment {
             }
         }
         return true;
+    }
+
+    public void TakePhoto() {
+        imageCapture.takePicture(Executors.newSingleThreadExecutor(),
+                new ImageCapture.OnImageCapturedCallback() {
+                    public void onCaptureSuccess (ImageProxy imageProxy) {
+                        // Log
+                        Log.d("CameraGUI", "Image taken good");
+                        Log.d("CameraGUI", String.valueOf(imageProxy.getFormat()));
+
+                        // Cache
+                        BitCase.SaveBitmap("TempIMG", UtilityManager.ScaleBmp(UtilityManager.CompressBitmap(UtilityManager.ToBitmap(imageProxy), 10),PictureSizeX,PictureSizeY));
+
+                        // Notify User
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                // Toast
+                                Toast.makeText(getActivity(), getString(R.string.camera_sucess), Toast.LENGTH_SHORT).show();
+
+                                // Go to cam acceptance
+                                NavDirections action = CameraFragDirections.actionCameraFragToCamAcceptance();
+                                Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError (ImageCaptureException exception) {
+                        // Log
+                        Log.d("CameraGUI", "Image failed");
+
+                        // Notify User
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getActivity(), getString(R.string.camera_failiure), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
     }
 }
