@@ -46,9 +46,10 @@ public class CameraFrag extends Fragment {
     private ListenableFuture<ProcessCameraProvider> CameraProviderFuture;
     private BMPCache BitCase = new BMPCache();
     private int PictureQuality = 10;
-    private int PictureSizeX = 200;
-    private int PictureSizeY = 200;
+    private int PictureSizeX = 100;
+    private int PictureSizeY = 100;
     private ImageCapture imageCapture;
+    private String[] Privs = { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,  Manifest.permission.ACCESS_FINE_LOCATION};
 
     public CameraFrag(){
 
@@ -65,6 +66,8 @@ public class CameraFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         InflatedView = inflater.inflate(R.layout.fragment_camera, container, false);
+
+        //Log.d("CameraFrag", "Help");
 
         // Init priv and cam
         InitPriv();
@@ -83,7 +86,8 @@ public class CameraFrag extends Fragment {
 
     // Check privs then init cam
     public void InitPriv() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+        if (CheckPrivs(Privs) == true) {
             // Init Camera
             InitCamera();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), "Manifest.permission.CAMERA") == true) {
@@ -92,11 +96,25 @@ public class CameraFrag extends Fragment {
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), "Manifest.permission.WRITE_EXTERNAL_STORAGE") == true) {
             // Notify User
             Toast.makeText(getActivity(), getString(R.string.info_permission_external_storage), Toast.LENGTH_SHORT);
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), "Manifest.permission.ACCESS_FINE_LOCATION") == true) {
+            // Notify User
+            Toast.makeText(getActivity(), getString(R.string.info_permission_location), Toast.LENGTH_SHORT);
         } else {
             // If Privs aren't givient
-            requestPermissions(new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 69);
+            requestPermissions(Privs, 69);
         }
 
+    }
+
+    private boolean CheckPrivs(String[] Privs) {
+        for (String Current:Privs){
+            Log.d("CameraFrag", "Checking: " + Current);
+            if (ContextCompat.checkSelfPermission(getActivity(), Current) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void BindPreview(ProcessCameraProvider CameraProvider) {
@@ -154,17 +172,17 @@ public class CameraFrag extends Fragment {
         switch (requestCode) {
             case 69:
                 // Request for write external and cam
-                if (grantResults.length > 1 && CheckGrantResults(grantResults)) {
+                if (CheckGrantResults(grantResults)) {
                     // If priv is granted
-                    InitCamera();
+                    InitPriv();
 
                     // Log
                     Log.d("CameraFrag", "Priv is granted");
                     Log.d("CameraFrag", "GrantResults = " + Arrays.toString(grantResults));
 
                     // Restart Fragment
-                    NavDirections action = CameraFragDirections.actionCameraFragSelf();
-                    Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
+//                    NavDirections action = CameraFragDirections.actionCameraFragSelf();
+//                    Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
                 } else {
                     // If priv isnt granted go back to map
                     NavDirections action = CameraFragDirections.actionCameraFragToHomeActvity();

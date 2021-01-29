@@ -25,4 +25,5 @@
     <string name="info_permission_external_storage">The WRITE_EXTERNAL_STORAGE permission is needed to use the app</string>
     <string name="camera_sucess">Image sucessfully captured</string>
     <string name="camera_failiure">Something went wrong while taking the pic!</string>
+    <string name="info_permission_location">The location permission are required to use this function</string>
 </resources>
