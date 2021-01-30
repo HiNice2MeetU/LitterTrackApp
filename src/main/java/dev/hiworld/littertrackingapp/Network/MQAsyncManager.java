@@ -60,7 +60,7 @@ public class MQAsyncManager {
             // Do
             Execute(Current);
         } else {
-            Log.e("MQAsyncClient", "Cannot next on empty list");
+            Log.e("MQAsyncClient", "Cannot Next on null list");
         }
     }
 

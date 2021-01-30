@@ -106,7 +106,9 @@ public class MQAsyncClient {
                 MQAsync.disconnect(DefaultDisTimeout, SucessCall);
             } else {
                 // If MqAsync isnt connected
-                SucessCall.onFailure(new MqttToken(), new NullPointerException());
+                if (SucessCall != null) {
+                    SucessCall.onFailure(new MqttToken(), new NullPointerException());
+                }
 
                 // Log
                 Log.e("MQAsyncClient", "No Connection " + "@Disconnect");
@@ -116,7 +118,9 @@ public class MQAsyncClient {
             Log.e("MQAsyncClient", e.toString()+"@" + "Disconnect");
 
             // Notify listener
-            SucessCall.onFailure(new MqttToken(), e);
+            if (SucessCall != null) {
+                SucessCall.onFailure(new MqttToken(), e);
+            }
         }
     }
 

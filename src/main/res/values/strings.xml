@@ -27,4 +27,6 @@
     <string name="camera_failiure">Something went wrong while taking the pic!</string>
     <string name="info_permission_location">The location permission are required to use this function</string>
     <string name="info_unkown_location">Could not find your location</string>
+    <string name="info_known_location">Your location has been found</string>
+    <string name="info_connection_failed">Could not connect to server, please try again later</string>
 </resources>
