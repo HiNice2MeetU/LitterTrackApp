@@ -51,6 +51,7 @@ public class CamAcceptance extends Fragment implements MqttCallback {
     private boolean ShowedLocMsg = false;
     private String PublishID;
     private MQAsyncManager MQM = new MQAsyncManager();
+    private boolean Failed = false;
 
     public CamAcceptance() {
         // Required empty public constructor
@@ -152,7 +153,30 @@ public class CamAcceptance extends Fragment implements MqttCallback {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.d("CameraFrag", "MQM Action Sucesfull");
-                MQM.Next();
+                if (!Failed) {
+                    MQM.Next();
+                }
+            }
+
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.e("CameraFrag", "MQM Action failed");
+                NotifyNetErr();
+                Failed = true;
+            }
+        };
+
+        // Make command listener
+        IMqttActionListener PublishListener = new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                // Log
+                Log.d("CameraFrag", "MQM Action Sucesfull");
+                //MQM.Next();
+
+//                // Go to home
+//                NavDirections action = CameraFragDirections.actionCameraFragToCamAcceptance();
+//                Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
             }
 
             @Override
@@ -163,10 +187,11 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         };
 
 
+
         // Add commands
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
-        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(692,86,"FiftyFour"), new Event(96,96,"NinetySix"))), "Ladida"), MQListener);
+        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(692,86,"FiftyFour"), new Event(96,96,"NinetySix"))), "Ladida"), PublishListener);
         MQM.Next();
     }
 

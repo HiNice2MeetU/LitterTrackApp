@@ -74,6 +74,9 @@ public class MQAsyncManager {
         // Get Listener
         IMqttActionListener Listener = RawMsg.getListener();
 
+        // Check Ping
+        MQClient.CheckPing(Listener);
+
         // Switch Statement to determine what to do
         switch (Cmd) {
             case "Connect":

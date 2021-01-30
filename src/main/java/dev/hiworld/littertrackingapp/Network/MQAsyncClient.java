@@ -39,6 +39,23 @@ public class MQAsyncClient {
         Log.d("MQAsyncClient", "SessionID = " + SessionID);
     }
 
+    // Check Ping
+    public void CheckPing(IMqttActionListener SucessCall) {
+        // Disconnect
+        try {
+            if (MQAsync.isConnected()) {
+                // If mqasync is connected
+                MQAsync.checkPing(null, SucessCall);
+            }
+        } catch (Exception e) {
+            // Log
+            Log.e("MQAsyncClient", e.toString() +"@" + "CheckPing");
+
+            // Notify listener
+            SucessCall.onFailure(new MqttToken(), e);
+        }
+    }
+
     // Connect
     public void Connect(String BrokerUri, MqttCallback RecieveCall, boolean AutoSub, IMqttActionListener SucessCall) {
         // Make Client
