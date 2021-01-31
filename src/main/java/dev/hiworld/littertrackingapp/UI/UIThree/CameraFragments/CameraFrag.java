@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.camera.core.Camera;
@@ -73,10 +75,13 @@ public class CameraFrag extends Fragment {
         InitPriv();
 
         // Add Listener to take pic button
-        InflatedView.findViewById(R.id.TakeIMG).setOnClickListener(new View.OnClickListener() {
+        ImageButton PhotoButton = InflatedView.findViewById(R.id.TakeIMG);
+        PhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PhotoButton.setEnabled(false);
                 TakePhoto();
+
             }
         });
 
@@ -228,7 +233,7 @@ public class CameraFrag extends Fragment {
 
                                 // Go to cam acceptance
                                 NavDirections action = CameraFragDirections.actionCameraFragToCamAcceptance();
-                                Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
+                                Navigation.findNavController(getActivity(), R.id.previewView).navigate(action);
                             }
                         });
                     }

@@ -51,7 +51,6 @@ public class CamAcceptance extends Fragment implements MqttCallback {
     private boolean ShowedLocMsg = false;
     private String PublishID;
     private MQAsyncManager MQM = new MQAsyncManager();
-    private boolean Failed = false;
 
     public CamAcceptance() {
         // Required empty public constructor
@@ -81,18 +80,24 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         // Configure Buttons
         Accept.setEnabled(false);
 
+        MQM.setFailed(true);
+
         // Set Callbacks
         Accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Send img to server
+                MQM.setFailed(false);
+                Accept.setEnabled(false);
                 ProcessImg();
+
             }
         });
 
         Decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 // Go back to camera frag
                 NavDirections action = CamAcceptanceDirections.actionCamAcceptanceToCameraFrag();
                 Navigation.findNavController(InflatedView.findViewById(R.id.Accept)).navigate(action);
@@ -148,21 +153,21 @@ public class CamAcceptance extends Fragment implements MqttCallback {
 
     private void ProcessImg() {
 
+
         // Make command listener
         IMqttActionListener MQListener = new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.d("CameraFrag", "MQM Action Sucesfull");
-                if (!Failed) {
-                    MQM.Next();
-                }
+                MQM.Next();
             }
 
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                 Log.e("CameraFrag", "MQM Action failed");
                 NotifyNetErr();
-                Failed = true;
+
+                MQM.setFailed(true);
             }
         };
 
@@ -174,9 +179,9 @@ public class CamAcceptance extends Fragment implements MqttCallback {
                 Log.d("CameraFrag", "MQM Action Sucesfull");
                 //MQM.Next();
 
-//                // Go to home
-//                NavDirections action = CameraFragDirections.actionCameraFragToCamAcceptance();
-//                Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
+                // Go to home
+                NavDirections action = CamAcceptanceDirections.actionCamAcceptanceToHomeActvity2();
+                Navigation.findNavController(getView().findViewById(R.id.Accept)).navigate(action);
             }
 
             @Override
@@ -253,8 +258,10 @@ public class CamAcceptance extends Fragment implements MqttCallback {
             }
         };
 
-        MQM.Add(new MQMsg("Disconnect"), MQDisconnect);
-        MQM.Next();
+        if (!MQM.isFailed()) {
+            MQM.Add(new MQMsg("Disconnect"), MQDisconnect);
+            MQM.Next();
+        }
 
         CamAcceptance.super.onStop();
     }

@@ -11,8 +11,9 @@ import java.util.LinkedList;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQAsyncManager {
-    // Global SessionID
+    // Globals
     String SessionID;
+    private boolean Failed = false;
 
     // Queue List
     LinkedList <MQListMsg> MsgQueue = new LinkedList<MQListMsg>();
@@ -74,33 +75,42 @@ public class MQAsyncManager {
         // Get Listener
         IMqttActionListener Listener = RawMsg.getListener();
 
-        // Check Ping
-        MQClient.CheckPing(Listener);
-
         // Switch Statement to determine what to do
-        switch (Cmd) {
-            case "Connect":
-                // Connect
-                MQClient.Connect((String)Params.get(0), (MqttCallback)Params.get(1), (boolean)Params.get(2), Listener);
-                break;
-            case "Disconnect":
-                // Disconnect
-                MQClient.Disconnect(Listener);
-                break;
-            case "Subscribe":
-                // Log
-                Log.d("MQAsyncClient", "Subbing@Executor");
+        if (!Failed) {
+            switch (Cmd) {
+                case "Connect":
+                    // Connect
+                    MQClient.Connect((String) Params.get(0), (MqttCallback) Params.get(1), (boolean) Params.get(2), Listener);
+                    break;
+                case "Disconnect":
+                    // Disconnect
+                    MQClient.Disconnect(Listener);
 
-                // Sub
-                MQClient.Subscribe(Listener);
-                break;
-            default:
-                // Log
-                Log.d("MQAsyncClient", "Publishing@Executor");
+                    // Check Ping
+                    MQClient.CheckPing(Listener);
 
-                // Send to server
-                MQClient.Publish(Msg, Listener);
-                break;
+                    break;
+                case "Subscribe":
+                    // Log
+                    Log.d("MQAsyncClient", "Subbing@Executor");
+
+                    // Check Ping
+                    MQClient.CheckPing(Listener);
+
+                    // Sub
+                    MQClient.Subscribe(Listener);
+                    break;
+                default:
+                    // Log
+                    Log.d("MQAsyncClient", "Publishing@Executor");
+
+                    // Check Ping
+                    MQClient.CheckPing(Listener);
+
+                    // Send to server
+                    MQClient.Publish(Msg, Listener);
+                    break;
+            }
         }
     }
 
@@ -148,6 +158,16 @@ public class MQAsyncManager {
 
     public void setSessionID(String sessionID) {
         SessionID = sessionID;
+    }
+
+    // Getters and Setters
+
+    public boolean isFailed() {
+        return Failed;
+    }
+
+    public void setFailed(boolean failed) {
+        Failed = failed;
     }
 }
 
