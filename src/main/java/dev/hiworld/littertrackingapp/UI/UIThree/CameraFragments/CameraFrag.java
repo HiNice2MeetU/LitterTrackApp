@@ -47,7 +47,7 @@ public class CameraFrag extends Fragment {
     private View InflatedView;
     private ListenableFuture<ProcessCameraProvider> CameraProviderFuture;
     private BMPCache BitCase = new BMPCache();
-    private int PictureQuality = 10;
+    private int PictureQuality = 50;
     private int PictureSizeX = 100;
     private int PictureSizeY = 100;
     private ImageCapture imageCapture;
@@ -223,7 +223,7 @@ public class CameraFrag extends Fragment {
                         Log.d("CameraGUI", String.valueOf(imageProxy.getFormat()));
 
                         // Cache
-                        BitCase.SaveBitmap("TempIMG", UtilityManager.ScaleBmp(UtilityManager.CompressBitmap(UtilityManager.ToBitmap(imageProxy), 10),PictureSizeX,PictureSizeY));
+                        BitCase.SaveObject("TempIMG", UtilityManager.ToBase64(UtilityManager.ScaleBmp(UtilityManager.ToBitmap(imageProxy),PictureSizeX,PictureSizeY), PictureQuality));
 
                         // Notify User
                         getActivity().runOnUiThread(new Runnable() {

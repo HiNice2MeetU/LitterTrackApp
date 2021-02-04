@@ -83,7 +83,7 @@ public class EventMeta2 extends AppCompatActivity implements View.OnClickListene
 
         // Get image
         BMPCache BitCase = new BMPCache();
-        Img = BitCase.RetrieveBitmap("TempIMG");
+        //Img = BitCase.RetrieveObject("TempIMG");
 
         // Set image
         if (Img != null && ImgV!=null) {

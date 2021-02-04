@@ -24,21 +24,21 @@ public class BMPCache {
         return Lru;
     }
 
-    public void SaveBitmap(String key, Bitmap bitmap){
+    public void SaveObject(String key, Object input){
         try {
-            BMPCache.getInstance().getLru().put(key, bitmap);
+            BMPCache.getInstance().getLru().put(key, input);
             Log.d("BitmapCache", "Cache (Saved): "+Lru.toString());
         } catch (Exception e){
             Log.d("BitmapCache", "Something has gone terribly wrong saving");
         }
     }
 
-    public Bitmap RetrieveBitmap(String key){
+    public Object RetrieveObject(String key){
 
         try {
-            Bitmap bitmap = (Bitmap) BMPCache.getInstance().getLru().get(key);
+            Object Return = BMPCache.getInstance().getLru().get(key);
             Log.d("BitmapCache", "Cache (Returned): "+Lru.toString());
-            return bitmap;
+            return Return;
         } catch (Exception e){
             Log.d("BitmapCache", "Something has gone terribly wrong retrieving");
             return null;

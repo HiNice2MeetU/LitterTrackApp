@@ -75,9 +75,9 @@ public class UtilityManager {
     }
 
     // Encode to Base 64 String
-    public static String ToBase64(Bitmap Bmp) {
+    public static String ToBase64(Bitmap Bmp, int Quality) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        Bmp.compress(Bitmap.CompressFormat.JPEG, Quality, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
 
         return Base64.encodeToString(byteArray, Base64.DEFAULT);

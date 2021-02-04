@@ -35,6 +35,7 @@ import dev.hiworld.littertrackingapp.Network.Event;
 import dev.hiworld.littertrackingapp.Network.*;
 import dev.hiworld.littertrackingapp.R;
 import dev.hiworld.littertrackingapp.Utility.BMPCache;
+import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +52,7 @@ public class CamAcceptance extends Fragment implements MqttCallback {
     private boolean ShowedLocMsg = false;
     private String PublishID;
     private MQAsyncManager MQM = new MQAsyncManager();
+    private String BmpBase;
 
     public CamAcceptance() {
         // Required empty public constructor
@@ -63,12 +65,15 @@ public class CamAcceptance extends Fragment implements MqttCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Img Base64
+        BmpBase = (String)BitCase.RetrieveObject("TempIMG");
+
         // Inflate the layout for this fragment
         View InflatedView = inflater.inflate(R.layout.fragment_cam_acceptance, container, false);
 
         // Set img
         ImageView ImgDisplay = InflatedView.findViewById(R.id.ImgPreview);
-        ImgDisplay.setImageBitmap(BitCase.RetrieveBitmap("TempIMG"));
+        ImgDisplay.setImageBitmap(UtilityManager.FromBase64(BmpBase));
 
         // Get Elements
         FloatingActionButton Accept = InflatedView.findViewById(R.id.Accept);
@@ -195,7 +200,8 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         // Add commands
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
-        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(1)), "GetAll"), PublishListener);
+        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase))), "AddRow"), PublishListener);
+        //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
         MQM.Next();
     }
 
