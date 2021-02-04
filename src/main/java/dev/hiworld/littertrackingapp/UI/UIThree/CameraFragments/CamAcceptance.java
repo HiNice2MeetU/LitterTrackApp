@@ -192,11 +192,10 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         };
 
 
-
         // Add commands
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
-        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(692,86,"FiftyFour"), new Event(96,96,"NinetySix"))), "Ladida"), PublishListener);
+        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(1)), "GetAll"), PublishListener);
         MQM.Next();
     }
 
@@ -216,21 +215,20 @@ public class CamAcceptance extends Fragment implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
+        // Get Message
+        String RawMsg = message.toString();
+
         // Decode the json into MqMsg
-        MQMsg FormattedMsg = MQAsyncClient.DecodeResult(message.toString());
+        MQMsg FormattedMsg = MQAsyncClient.DecodeResult(RawMsg);
 
-        // Check if msg isnt null
-        if (FormattedMsg!=null) {
-            // Chck if msg is valid
-            if (MQAsyncClient.Validate(FormattedMsg, PublishID, MQM.getSessionID()) == MsgType.YES) {
-                // Log
+        // Log
+        Log.d("MQAsyncClient", "Msg Arrived: " + RawMsg);
 
-            }
-
-            Log.d("CameraFrag", "Msg Arrived: " + FormattedMsg.toString());
+        // Check Formatted Msg != null
+        if (FormattedMsg != null) {
+            Log.d("MQAsyncClient", "Formatted Msg Arrived: " + FormattedMsg.toString());
         } else {
-            // Log a null formatted msg
-            Log.e("CameraFrag", "FormattedMsg == null");
+            Log.d("MQAsyncClient", "Formatted Msg Failed: " + RawMsg);
         }
     }
 
