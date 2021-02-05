@@ -48,8 +48,8 @@ public class CameraFrag extends Fragment {
     private ListenableFuture<ProcessCameraProvider> CameraProviderFuture;
     private BMPCache BitCase = new BMPCache();
     private int PictureQuality = 50;
-    private int PictureSizeX = 100;
-    private int PictureSizeY = 100;
+    private int PictureSizeX = 300;
+    private int PictureSizeY = 300;
     private ImageCapture imageCapture;
     private String[] Privs = { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,  Manifest.permission.ACCESS_FINE_LOCATION};
 
