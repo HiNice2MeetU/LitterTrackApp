@@ -6,6 +6,7 @@
         android:id="@+id/Map"
         android:icon="@drawable/ic_baseline_home_24"
         android:title="@string/navigation_map" />
+
     <item
         android:id="@+id/Settings"
         android:icon="@drawable/ic_baseline_settings_24"

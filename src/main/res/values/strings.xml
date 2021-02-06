@@ -1,27 +1,15 @@
 <resources>
     <string name="app_name">LitterTrackingApp</string>
-    <string name="title_activity_mapy2">Map</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="navigation_camera">Camera</string>
     <string name="navigation_map">Home</string>
     <string name="navigation_settings">Settings</string>
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="info_permission_camera">The camera permission are needed to use the application</string>
-    <string name="info_permission_failed">Permisson Denied, Permissions are required to use this feature</string>
     <string name="info_permission_external_storage">The WRITE_EXTERNAL_STORAGE permission is needed to use the app</string>
     <string name="camera_sucess">Image sucessfully captured</string>
     <string name="camera_failiure">Something went wrong while taking the pic!</string>
@@ -29,4 +17,8 @@
     <string name="info_unkown_location">Could not find your location</string>
     <string name="info_known_location">Your location has been found</string>
     <string name="info_connection_failed">Could not connect to server, please try again later</string>
+    <string name="info_contacting_server">Contacting Server...</string>
+    <string name="settings_category_map">Map</string>
+    <string name="settings_category_account">Account</string>
+    <!-- Strings related to login -->
 </resources>

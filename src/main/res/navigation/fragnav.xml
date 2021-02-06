@@ -2,24 +2,9 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragnav"
+    android:id="@+id/FragNav"
     app:startDestination="@id/mappyFrag">
 
-    <action
-        android:id="@+id/action_global_to_settings"
-        app:destination="@id/settingsFrag"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim" />
-    <action
-        android:id="@+id/action_global_to_cameraView"
-        app:destination="@id/cameraView"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim" />
-    <action
-        android:id="@+id/action_global_to_home"
-        app:destination="@id/mappyFrag"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim" />
 
     <activity
         android:id="@+id/cameraView"
@@ -35,4 +20,19 @@
         android:id="@+id/settingsFrag"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.SettingsFrag"
         android:label="SettingsFrag" />
+    <action
+        android:id="@+id/action_global_cameraView"
+        app:destination="@id/cameraView"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <action
+        android:id="@+id/action_global_mappyFrag"
+        app:destination="@id/mappyFrag"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <action
+        android:id="@+id/action_global_settingsFrag"
+        app:destination="@id/settingsFrag"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
 </navigation>

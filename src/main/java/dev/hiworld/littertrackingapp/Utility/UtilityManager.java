@@ -85,8 +85,13 @@ public class UtilityManager {
 
     // Decode frome Base 64 String to Bmp
     public static Bitmap FromBase64(String In){
-        byte[] decodedString = Base64.decode(In, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        try {
+            byte[] decodedString = Base64.decode(In, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        } catch (Exception e) {
+            Log.e("UtilityManager", e.toString());
+            return null;
+        }
     }
 
     public int getREQUEST_CODE_PRIVS() {

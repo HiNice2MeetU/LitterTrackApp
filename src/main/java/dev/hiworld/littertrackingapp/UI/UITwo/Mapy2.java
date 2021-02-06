@@ -122,14 +122,6 @@ public class Mapy2 extends FragmentActivity implements OnMapReadyCallback {
                 // Set Img
                 String Bmp = CEvent.getBmp();
 
-                try {
-                    if (Bmp != null) {
-                        CInfoWin.setBmp(UM.FromBase64(Bmp));
-                    }
-                } catch (IllegalArgumentException e) {
-                    Log.e("MapyClass2", "Bad Base64: " + Bmp);
-                }
-
                 // Add Marker
                 Mapy2.this.runOnUiThread(new Runnable() {
                     @Override

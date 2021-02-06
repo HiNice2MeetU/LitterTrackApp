@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.hiworld.littertrackingapp">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -21,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LitterTrackingApp">
-
+        <activity android:name=".UI.UIThree.LoginActivity"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -30,6 +29,7 @@
         <activity android:name=".UI.UIThree.HomeActvity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>

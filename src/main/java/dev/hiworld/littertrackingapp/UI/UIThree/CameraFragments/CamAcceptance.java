@@ -203,6 +203,9 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase))), "AddRow"), PublishListener);
         //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
         MQM.Next();
+
+        // Toast
+        Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
     }
 
     private void NotifyNetErr() {

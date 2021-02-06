@@ -47,7 +47,7 @@ public class CameraFrag extends Fragment {
     private View InflatedView;
     private ListenableFuture<ProcessCameraProvider> CameraProviderFuture;
     private BMPCache BitCase = new BMPCache();
-    private int PictureQuality = 50;
+    private int PictureQuality = 10;
     private int PictureSizeX = 300;
     private int PictureSizeY = 300;
     private ImageCapture imageCapture;

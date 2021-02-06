@@ -48,7 +48,7 @@ public class HomeActvity extends AppCompatActivity {
                     case "Camera":
                         // If Camera is selected move to camera actvity
                         if (!CurrentDest.equals("se")) {
-                            NavControl.navigate(R.id.action_global_to_cameraView);
+                            NavControl.navigate(R.id.action_global_cameraView);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
                             Log.e("HomeActivity", "Already on destination: " + CurrentDest);
@@ -57,7 +57,7 @@ public class HomeActvity extends AppCompatActivity {
                     case "Map":
                         // If Map is selected
                         if (!CurrentDest.equals("fragment_mappy")) {
-                            NavControl.navigate(R.id.action_global_to_home);
+                            NavControl.navigate(R.id.action_global_mappyFrag);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
                             Log.e("HomeActivity", "Already on destination: " + CurrentDest);
@@ -66,7 +66,7 @@ public class HomeActvity extends AppCompatActivity {
                     case "Settings":
                         // If Settings is selected navigate to settings
                         if (!CurrentDest.equals("SettingsFrag")) {
-                            NavControl.navigate(R.id.action_global_to_settings);
+                            NavControl.navigate(R.id.action_global_settingsFrag);
                             Log.d("HomeActivity", "on destination: " + CurrentDest);
                         } else {
                             Log.e("HomeActivity", "Already on destination: " + CurrentDest);
@@ -81,5 +81,13 @@ public class HomeActvity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void Login() {
+        // Configure Login
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
     }
 }

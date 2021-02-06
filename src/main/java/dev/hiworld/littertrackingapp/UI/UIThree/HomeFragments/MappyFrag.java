@@ -25,7 +25,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -38,12 +40,11 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 
-public class MappyFrag extends Fragment implements MqttCallback {
+public class MappyFrag extends Fragment {
 
     // Globals
-    private UtilityManager UM = new UtilityManager();
-    private TrashConA CInfoWin;
     private String PublishID;
+    private Gson gson = new Gson();
     private GoogleMap Gmap;
 
     // Networking
@@ -84,19 +85,62 @@ public class MappyFrag extends Fragment implements MqttCallback {
             //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             // Networking
-            Gmap = googleMap;
             MQM.setFailed(false);
-            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", MappyFrag.this, false)), "Connect"),MQListener);
+            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", new MqttCallback(){
+
+                @Override
+                public void connectionLost(Throwable cause) {
+                    NotifyNetErr();
+                }
+
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    // Get Message
+                    String RawMsg = message.toString();
+
+                    // Decode the json into MqMsg
+                    MQMsg FormattedMsg = MQAsyncClient.DecodeResult(RawMsg);
+
+                    // Log
+                    Log.d("MappyFrag", "Msg Arrived: " + RawMsg);
+
+                    // Check Formatted Msg != null
+                    if (FormattedMsg != null) {
+                        // Check if is for publish id
+                        if (MQAsyncClient.Validate(FormattedMsg, PublishID, MQM.getSessionID()) == MsgType.YES) {
+                            // Log
+                            Log.d("MappyFrag", "Formatted Msg Arrived: " + FormattedMsg.toString());
+
+                            // Turn ArrayList<Object> into ArrayList<Event>
+                            LinkedList<Event>TempEvents = new LinkedList<Event>();
+                            for (Object object : FormattedMsg.getParams()) {
+                                TempEvents.add((Event)object);
+                                Log.d("MappyFrag", "Adding to temp events: " + object.toString());
+                                MQM.setFailed(false);
+                            }
+
+                            // Start Adder Thread
+                            StartMarkThread(TempEvents, googleMap);
+                        }
+                    } else {
+                        Log.d("MappyFrag", "Formatted Msg Failed: " + RawMsg);
+                    }
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+
+                }
+
+            }, false)), "Connect"),MQListener);
             MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
             PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(), "GetAll"), MQListener);
             MQM.Next();
 
-            // Add Markers to map
-            CInfoWin = new TrashConA(getActivity());
-            //StartMarkThread(googleMap);
-
             // Set info window
+            TrashConA CInfoWin = new TrashConA(getActivity());
             googleMap.setInfoWindowAdapter(CInfoWin);
+            Gmap = googleMap;
         }
     };
 
@@ -168,67 +212,65 @@ public class MappyFrag extends Fragment implements MqttCallback {
 
         // Main run loop
         public void run() {
-            //
-            AddMarkers();
+            // Add Markers
+            AddMarkers(DBData,Gmap, AddDelay, LookCamera);
 
             // Log
             Log.d("MappyFrag", "Finished adding markers");
         }
+    }
 
-        // Add Markers
-        public void AddMarkers() {
-            // Loop till all markers been added
-            while (DBData.size() > 0) {
-                // Get Current
-                Event CEvent = DBData.removeFirst();
+    // Add Markers
+    public void AddMarkers(LinkedList<Event> DBData, GoogleMap googleMap, long AddDelay, boolean LookCamera) {
+        // Loop till all markers been added
+        while (DBData.size() > 0) {
+            // Get Current
+            Event CEvent = DBData.removeFirst();
 
-                // Clear it in list
-                //DBData.remove(0);
+            // Clear it in list
+            //DBData.remove(0);
 
-                // Extract Lng & Lat
-                LatLng CPos = new LatLng(CEvent.getLongitude(),CEvent.getLatitude());
+            // Extract Lng & Lat
+            LatLng CPos = new LatLng(CEvent.getLongitude(),CEvent.getLatitude());
 
-                // Set Img
-                String Bmp = CEvent.getBmp();
+            // Set Img
+            String Bmp = CEvent.getBmp();
 
-                // Try to set Info win window
-                try {
-                    if (Bmp != null) {
-                        CInfoWin.setBmp(UM.FromBase64(Bmp));
+            // Add Marker on main thread
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Add Marker
+                    Marker AddedMarker = googleMap.addMarker(new MarkerOptions()
+                            .position(CPos)
+                            .title("Marker at " + CPos.toString())
+                            // Set Image
+                            .snippet(gson.toJson(CEvent)));
+
+                    // Log
+                    Log.d("MappyFrag", "Added Marker at " + CPos.toString());
+
+                    // Move Camera
+                    if (LookCamera) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(CPos));
                     }
-                } catch (IllegalArgumentException e) {
-                    Log.e("MappyFrag", "Bad Base64: " + Bmp);
                 }
-
-                // Add Marker on main thread
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Add Marker
-                        mMap.addMarker(new MarkerOptions().position(CPos).title("Marker at " + CPos.toString()).snippet("If you are seeing this message something has gone wrong!"));
-                        Log.d("MappyFrag", "Added Marker at " + CPos.toString());
-
-                        // Move Camera
-                        if (LookCamera) {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(CPos));
-                        }
-                    }
-                });
+            });
 
 
-                // Log
-                Log.d("MappyFrag", "Request Add Marker at " + CPos.toString() + ", " + String.valueOf(DBData.size()) + " Markers left");
+            // Log
+            Log.d("MappyFrag", "Request Add Marker at " + CPos.toString() + ", " + String.valueOf(DBData.size()) + " Markers left");
 
-                //Sleep
-                try {
-                    Thread.sleep(AddDelay);
-                } catch (InterruptedException e) {
-                    Log.e("MappyFrag", e.toString());
-                }
+            //Sleep
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Log.e("MappyFrag", e.toString());
             }
         }
     }
 
+    // Notify user of error
     private void NotifyNetErr() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -236,56 +278,16 @@ public class MappyFrag extends Fragment implements MqttCallback {
                 // Toast
                 Toast.makeText(getActivity(), getString(R.string.info_connection_failed), Toast.LENGTH_SHORT).show();
 
+                // Log
+                Log.d("MappyFrag", "Showed NotifyNetErr");
+
                 // Set Failed
                 MQM.setFailed(true);
             }
         });
     }
 
-    @Override
-    public void connectionLost(Throwable cause) {
-        NotifyNetErr();
-    }
-
-    @Override
-    public void messageArrived(String topic, MqttMessage message) throws Exception {
-        // Get Message
-        String RawMsg = message.toString();
-
-        // Decode the json into MqMsg
-        MQMsg FormattedMsg = MQAsyncClient.DecodeResult(RawMsg);
-
-        // Log
-        Log.d("MappyFrag", "Msg Arrived: " + RawMsg);
-
-        // Check Formatted Msg != null
-        if (FormattedMsg != null) {
-            // Check if is for publish id
-            if (MQAsyncClient.Validate(FormattedMsg, PublishID, MQM.getSessionID()) == MsgType.YES) {
-                // Log
-                Log.d("MappyFrag", "Formatted Msg Arrived: " + FormattedMsg.toString());
-
-                // Turn ArrayList<Object> into ArrayList<Event>
-                LinkedList<Event>TempEvents = new LinkedList<Event>();
-                for (Object object : FormattedMsg.getParams()) {
-                    TempEvents.add((Event)object);
-                    Log.d("MappyFrag", "Adding to temp events: " + object.toString());
-                    MQM.setFailed(false);
-                }
-
-                // Start Adder Thread
-                StartMarkThread(TempEvents, Gmap);
-            }
-        } else {
-            Log.d("MappyFrag", "Formatted Msg Failed: " + RawMsg);
-        }
-    }
-
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-
-    }
-
+    // Disconnect from network when fragment is done
     public void onStop() {
         // Make disconnect listener
         Log.d("CameraFrag", "Disconnecting on destroy");

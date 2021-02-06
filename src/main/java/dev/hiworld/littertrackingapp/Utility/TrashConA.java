@@ -8,16 +8,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import dev.hiworld.littertrackingapp.Network.Event;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
 
 import dev.hiworld.littertrackingapp.R;
 
 public class TrashConA implements GoogleMap.InfoWindowAdapter {
     // Make init vars
     private View TCon;
-    private Bitmap Bmp;
+    private Gson gson = new Gson();
 
     // Constructor
     public TrashConA(Context Con) {
@@ -52,19 +55,15 @@ public class TrashConA implements GoogleMap.InfoWindowAdapter {
         Lat.setText(String.valueOf(Pos.latitude));
         Lng.setText(String.valueOf(Pos.longitude));
 
-        // set the image view
+        // Get Event from snippet
+        Event ImgEvent = gson.fromJson(marker.getSnippet(), Event.class);
+
+        // Check bmp isnt null
+        String Bmp = ImgEvent.getBmp();
         if (Bmp != null) {
-            ((ImageView) TCon.findViewById(R.id.Img)).setImageBitmap(Bmp);
+            // Set image view
+            ((ImageView) TCon.findViewById(R.id.Img)).setImageBitmap(UtilityManager.FromBase64(Bmp));
         }
 
-    }
-
-    // Getter and Setter
-    public Bitmap getBmp() {
-        return Bmp;
-    }
-
-    public void setBmp(Bitmap bmp) {
-        Bmp = bmp;
     }
 }
