@@ -15,7 +15,11 @@
         android:id="@+id/mappyFrag"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.MappyFrag"
         android:label="fragment_mappy"
-        tools:layout="@layout/fragment_mappy" />
+        tools:layout="@layout/fragment_mappy" >
+        <action
+            android:id="@+id/action_mappyFrag_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFrag"
         android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.SettingsFrag"
@@ -35,4 +39,9 @@
         app:destination="@id/settingsFrag"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
 </navigation>

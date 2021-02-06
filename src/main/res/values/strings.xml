@@ -20,5 +20,8 @@
     <string name="info_contacting_server">Contacting Server...</string>
     <string name="settings_category_map">Map</string>
     <string name="settings_category_account">Account</string>
+    <string name="info_question_account">You are not logged in, do you want to?</string>
+    <string name="accept">Yes</string>
+    <string name="decline">No</string>
     <!-- Strings related to login -->
 </resources>

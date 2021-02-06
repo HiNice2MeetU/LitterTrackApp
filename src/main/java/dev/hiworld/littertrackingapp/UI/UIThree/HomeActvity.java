@@ -7,15 +7,20 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import dev.hiworld.littertrackingapp.R;
+import dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.LoginDialogue;
+import dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.MappyFragDirections;
 
-public class HomeActvity extends AppCompatActivity {
+public class HomeActvity extends AppCompatActivity implements LoginDialogue.LoginListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,13 @@ public class HomeActvity extends AppCompatActivity {
 
         // Get Bottom Bar
         BottomNavigationView BottomBar = findViewById(R.id.BottomNavi);
+
+        // Check if logged in
+        if (GoogleSignIn.getLastSignedInAccount(this) == null) {
+            // Show login dialogue
+            DialogFragment DiagFrag = new LoginDialogue();
+            DiagFrag.show(getFragmentManager(), "LoginFrag");
+        }
 
 
         // Set Bottom Bar Callback
@@ -83,11 +95,15 @@ public class HomeActvity extends AppCompatActivity {
         });
     }
 
-    private void Login() {
-        // Configure Login
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        // Go to login activty
+        NavDirections action = MappyFragDirections.actionMappyFragToLoginActivity();
+        Navigation.findNavController(this, R.id.Frag).navigate(action);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
 
     }
 }
