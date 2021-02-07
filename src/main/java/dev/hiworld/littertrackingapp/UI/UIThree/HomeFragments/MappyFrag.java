@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import dev.hiworld.littertrackingapp.Network.Event;
@@ -59,6 +60,7 @@ public class MappyFrag extends Fragment {
     private String[] Privs = {Manifest.permission.ACCESS_FINE_LOCATION};
     private FusedLocationProviderClient fusedLocationClient;
     private Location Loc;
+    private ImageView WifiDisplay;
 
     // Networking
     MQAsyncManager MQM = new MQAsyncManager();
@@ -228,6 +230,10 @@ public class MappyFrag extends Fragment {
             mapFragment.getMapAsync(callback);
         }
 
+        // Get Wifi display
+        WifiDisplay = view.findViewById(R.id.NoCon);
+        WifiDisplay.setVisibility(View.GONE);
+
         // Get Provider
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
@@ -346,6 +352,7 @@ public class MappyFrag extends Fragment {
             public void run() {
                 // Toast
                 //Toast.makeText(getActivity(), getString(R.string.info_connection_failed), Toast.LENGTH_SHORT).show();
+                WifiDisplay.setVisibility(View.VISIBLE);
 
                 // Log
                 Log.d("MappyFrag", "Showed NotifyNetErr");
