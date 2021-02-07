@@ -44,18 +44,6 @@ public class UtilityManager {
     public UtilityManager(){
     }
 
-    public boolean CheckPrivs(Context context){
-        // Check Privs
-        for (String Perm : REQUIRED_PRIVS){
-            // Loop through Privs
-            if (ContextCompat.checkSelfPermission(context, Perm) != PackageManager.PERMISSION_GRANTED){
-                // If priv is not met
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void RequestPrivs(Context con, Activity an) {
         ActivityCompat.requestPermissions(an, REQUIRED_PRIVS, REQUEST_CODE_PRIVS);
     }

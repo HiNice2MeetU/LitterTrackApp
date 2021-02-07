@@ -2,8 +2,11 @@ package dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,16 +20,23 @@ import dev.hiworld.littertrackingapp.Network.MQAsyncManager;
 import dev.hiworld.littertrackingapp.Network.MQMsg;
 import dev.hiworld.littertrackingapp.Network.MsgType;
 import dev.hiworld.littertrackingapp.R;
+import dev.hiworld.littertrackingapp.Utility.PrivUtility;
 import dev.hiworld.littertrackingapp.Utility.TrashConA;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -46,6 +56,9 @@ public class MappyFrag extends Fragment {
     private String PublishID;
     private Gson gson = new Gson();
     private GoogleMap Gmap;
+    private String[] Privs = {Manifest.permission.ACCESS_FINE_LOCATION};
+    private FusedLocationProviderClient fusedLocationClient;
+    private Location Loc;
 
     // Networking
     MQAsyncManager MQM = new MQAsyncManager();
@@ -55,7 +68,9 @@ public class MappyFrag extends Fragment {
         @Override
         public void onSuccess(IMqttToken asyncActionToken) {
             Log.d("CameraFrag", "MQM Action Sucesfull");
-            MQM.Next();
+            if (MQM.isFailed() == false) {
+                MQM.Next();
+            }
         }
 
         @Override
@@ -141,8 +156,59 @@ public class MappyFrag extends Fragment {
             TrashConA CInfoWin = new TrashConA(getActivity());
             googleMap.setInfoWindowAdapter(CInfoWin);
             Gmap = googleMap;
+
+            // Set locate button
+            // Get button
+            FloatingActionButton Locate = getView().findViewById(R.id.Locate);
+            Locate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Log
+                    Log.d("MappyFrag", "Locate button clicked");
+
+                    // Check privelages
+                    if (CheckPrivs()) {
+                        GetLocation();
+                    }
+                }
+            });
         }
     };
+
+    private void GetLocation() {
+        // Get Location
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        // Log
+                        Log.d("CameraFrag", "Got Location: " + String.valueOf(location));
+                        if (location != null) {
+                            // update location
+                            Loc = location;
+                            MoveToLocation(location, Gmap);
+                            Log.d("MappyFrag", "Moving to location: " + location.toString());
+                        }
+                    }
+                });
+    }
+
+    private void MoveToLocation(Location Loc, GoogleMap mMap) {
+        // Get Location in latlng
+        LatLng LtnPos = new LatLng(Loc.getLatitude(), Loc.getLongitude());
+
+        // Build camera position
+        CameraPosition CamPos = new CameraPosition.Builder().target(new LatLng(Loc.getLatitude(), Loc.getLongitude()))
+                .zoom(20)
+                .build();
+
+        // Genorate cam update
+        CameraUpdate CamUpdate = CameraUpdateFactory.newCameraPosition(CamPos);
+
+        // Animate camera
+        mMap.animateCamera(CamUpdate, 1000, null);
+    }
 
     @Nullable
     @Override
@@ -161,6 +227,9 @@ public class MappyFrag extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
+        // Get Provider
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
 
     private void StartMarkThread(LinkedList<Event>Data,GoogleMap map){
@@ -276,7 +345,7 @@ public class MappyFrag extends Fragment {
             @Override
             public void run() {
                 // Toast
-                Toast.makeText(getActivity(), getString(R.string.info_connection_failed), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), getString(R.string.info_connection_failed), Toast.LENGTH_SHORT).show();
 
                 // Log
                 Log.d("MappyFrag", "Showed NotifyNetErr");
@@ -290,18 +359,18 @@ public class MappyFrag extends Fragment {
     // Disconnect from network when fragment is done
     public void onStop() {
         // Make disconnect listener
-        Log.d("CameraFrag", "Disconnecting on destroy");
+        Log.d("MappyFrag", "Disconnecting on destroy");
         IMqttActionListener MQDisconnect = new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
-                Log.d("CameraFrag", "MQM Action Sucesfull");
-                MQM.Next();
+                Log.d("MappyFrag", "MQM Action Sucesfull");
+                //MQM.Next();
                 //CamAcceptance.super.onStop();
             }
 
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                Log.e("CameraFrag", "MQM Action failed");
+                Log.e("MappyFrag", "MQM Action failed");
                 //NotifyNetErr();
                 //CamAcceptance.super.onStop();
             }
@@ -313,5 +382,44 @@ public class MappyFrag extends Fragment {
         }
 
         MappyFrag.super.onStop();
+    }
+
+    public boolean CheckPrivs() {
+        if (PrivUtility.CheckPrivs(getActivity(),Privs) == true) {
+            // If Privs aren't givient
+            return true;
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Privs[0]) == true) {
+            // Notify User
+            Toast.makeText(getActivity(), getString(R.string.info_permission_location), Toast.LENGTH_SHORT);
+        }
+        requestPermissions(Privs, 69);
+        return false;
+    }
+
+    // On permission result
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 69:
+                // Request for write external and cam
+                if (PrivUtility.CheckGrantResults(grantResults)) {
+                    // If priv is granted
+                    GetLocation();
+
+                    // Log
+                    Log.d("MappyFrag", "Priv is granted");
+                    Log.d("MappyFrag", "GrantResults = " + Arrays.toString(grantResults));
+                } else {
+                    // If priv isnt granted go back to map
+//                    NavDirections action = CameraFragDirections.actionCameraFragToHomeActvity();
+//                    Navigation.findNavController(InflatedView.findViewById(R.id.previewView)).navigate(action);
+
+
+                    // Log
+                    Log.d("MappyFrag", "Priv is not granted");
+                    Log.d("MappyFrag", "GrantResults = " + grantResults.toString());
+                }
+
+                return;
+        }
     }
 }

@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import java.util.concurrent.ExecutionException;
 
 import dev.hiworld.littertrackingapp.R;
 import dev.hiworld.littertrackingapp.Utility.BMPCache;
+import dev.hiworld.littertrackingapp.Utility.PrivUtility;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 import androidx.fragment.app.Fragment;
@@ -51,7 +53,7 @@ public class CameraFrag extends Fragment {
     private int PictureSizeX = 300;
     private int PictureSizeY = 300;
     private ImageCapture imageCapture;
-    private String[] Privs = { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,  Manifest.permission.ACCESS_FINE_LOCATION};
+    private String[] Privs = { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
 
     public CameraFrag(){
 
@@ -82,6 +84,18 @@ public class CameraFrag extends Fragment {
                 PhotoButton.setEnabled(false);
                 TakePhoto();
 
+            }
+        });
+
+        // Add listener to home button
+        FloatingActionButton HomeButton = InflatedView.findViewById(R.id.NavHome);
+        HomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go to cam acceptance
+                Log.d("CameraFrag", "HomeButton pressed");
+                NavDirections action = CameraFragDirections.actionCameraFragToHomeActvity();
+                Navigation.findNavController(getActivity(), R.id.previewView).navigate(action);
             }
         });
 
@@ -177,7 +191,7 @@ public class CameraFrag extends Fragment {
         switch (requestCode) {
             case 69:
                 // Request for write external and cam
-                if (CheckGrantResults(grantResults)) {
+                if (PrivUtility.CheckGrantResults(grantResults)) {
                     // If priv is granted
                     InitPriv();
 
@@ -203,16 +217,7 @@ public class CameraFrag extends Fragment {
         }
     }
 
-    public boolean CheckGrantResults(int[] GrantResults){
-        for (int Current:GrantResults) {
-            if (Current == PackageManager.PERMISSION_GRANTED) {
 
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
 
     public void TakePhoto() {
         imageCapture.takePicture(Executors.newSingleThreadExecutor(),

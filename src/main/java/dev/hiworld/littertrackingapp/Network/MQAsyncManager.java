@@ -15,6 +15,8 @@ public class MQAsyncManager {
     String SessionID;
     private boolean Failed = false;
 
+
+
     // Queue List
     LinkedList <MQListMsg> MsgQueue = new LinkedList<MQListMsg>();
 
