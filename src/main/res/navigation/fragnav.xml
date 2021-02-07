@@ -18,12 +18,25 @@
         tools:layout="@layout/fragment_mappy" >
         <action
             android:id="@+id/action_mappyFrag_to_loginActivity"
-            app:destination="@id/loginActivity" />
+            app:destination="@id/settingsFrag" >
+            <argument
+                android:name="InstaLogin"
+                android:defaultValue="true" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/settingsFrag"
-        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.SettingsFrag"
-        android:label="SettingsFrag" />
+        android:name="dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments.AccountFrag"
+        android:label="SettingsFrag"
+        tools:layout="@layout/fragment_account" >
+        <argument
+            android:name="InstaLogin"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_settingsFrag_to_mappyFrag"
+            app:destination="@id/mappyFrag" />
+    </fragment>
     <action
         android:id="@+id/action_global_cameraView"
         app:destination="@id/cameraView"
@@ -39,9 +52,4 @@
         app:destination="@id/settingsFrag"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
-    <activity
-        android:id="@+id/loginActivity"
-        android:name="dev.hiworld.littertrackingapp.UI.UIThree.LoginActivity"
-        android:label="activity_login"
-        tools:layout="@layout/activity_login" />
 </navigation>

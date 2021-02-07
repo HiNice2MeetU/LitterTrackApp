@@ -306,7 +306,7 @@ public class MappyFrag extends Fragment {
             //DBData.remove(0);
 
             // Extract Lng & Lat
-            LatLng CPos = new LatLng(CEvent.getLongitude(),CEvent.getLatitude());
+            LatLng CPos = new LatLng(CEvent.getLatitude(),CEvent.getLongitude());
 
             // Set Img
             String Bmp = CEvent.getBmp();

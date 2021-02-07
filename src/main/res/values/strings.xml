@@ -18,10 +18,16 @@
     <string name="info_known_location">Your location has been found</string>
     <string name="info_connection_failed">Could not connect to server, please try again later</string>
     <string name="info_contacting_server">Contacting Server...</string>
-    <string name="settings_category_map">Map</string>
-    <string name="settings_category_account">Account</string>
     <string name="info_question_account">You are not logged in, do you want to?</string>
     <string name="accept">Yes</string>
     <string name="decline">No</string>
+    <string name="label_user">User:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="label_logoff">Log Off</string>
+    <string name="info_account_loggedoff">Warning! You are not logged in.</string>
+    <string name="label_account_default">Anonymous</string>
+    <string name="label_account_cleardata">Clear Data</string>
+    <string name="info_generic_hold">Please Wait...</string>
+    <string name="label_account">Account</string>
     <!-- Strings related to login -->
 </resources>

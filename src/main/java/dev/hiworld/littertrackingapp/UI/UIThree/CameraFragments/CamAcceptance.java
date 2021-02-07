@@ -202,23 +202,26 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         };
 
         // Make Display name
-        String DisplayName = "Anonymous";
+        String DisplayName = getString(R.string.label_account_default);
 
         // Get Account
         GoogleSignInAccount Account = GoogleSignIn.getLastSignedInAccount(getActivity());
         if (Account != null) {
             DisplayName = Account.getDisplayName();
+
+            // Add commands
+            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
+            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
+            PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase,DisplayName))), "AddRow"), PublishListener);
+            //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
+            MQM.Next();
+
+            // Toast
+            Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
+        } else {
+            // Toast
+            Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
         }
-
-        // Add commands
-        MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
-        MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
-        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase,DisplayName))), "AddRow"), PublishListener);
-        //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
-        MQM.Next();
-
-        // Toast
-        Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
     }
 
     private void NotifyNetErr() {

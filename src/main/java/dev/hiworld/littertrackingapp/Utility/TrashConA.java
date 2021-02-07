@@ -58,6 +58,10 @@ public class TrashConA implements GoogleMap.InfoWindowAdapter {
         // Get Event from snippet
         Event ImgEvent = gson.fromJson(marker.getSnippet(), Event.class);
 
+        // set the user text
+        TextView NameDisplay = TCon.findViewById(R.id.User);
+        NameDisplay.setText(ImgEvent.getDisplayName());
+
         // Check bmp isnt null
         String Bmp = ImgEvent.getBmp();
         if (Bmp != null) {

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.UIThree.HomeFragments.AccountFrag">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/WelcomeMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@android:string/untitled"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textStyle="bold" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/SignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.gms.common.SignInButton>
+
+        <Button
+            android:id="@+id/LogOff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_logoff"
+            app:icon="@drawable/ic_baseline_person_remove_24" />
+
+        <Button
+            android:id="@+id/ClearData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_account_cleardata"
+            app:icon="@drawable/ic_baseline_phonelink_erase_24" />
+
+        <TextView
+            android:id="@+id/LFWarn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_account_loggedoff"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/design_default_color_error"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
