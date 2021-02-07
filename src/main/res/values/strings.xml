@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LitterTrackingApp</string>
+    <string name="app_name">TrackMyTrash</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="navigation_camera">Camera</string>
     <string name="navigation_map">Home</string>
@@ -18,7 +18,7 @@
     <string name="info_known_location">Your location has been found</string>
     <string name="info_connection_failed">Could not connect to server, please try again later</string>
     <string name="info_contacting_server">Contacting Server...</string>
-    <string name="info_question_account">You are not logged in, do you want to?</string>
+    <string name="info_question_account">You are not logged in, some features like posting will be restricted until you login, do you want to login?</string>
     <string name="accept">Yes</string>
     <string name="decline">No</string>
     <string name="label_user">User:</string>
@@ -30,5 +30,6 @@
     <string name="info_generic_hold">Please Wait...</string>
     <string name="label_account">Account</string>
     <string name="info_restricted_posting">Posting is diabled for anymous users</string>
+    <string name="info_sp_login">ShowLoginDialogue</string>
     <!-- Strings related to login -->
 </resources>

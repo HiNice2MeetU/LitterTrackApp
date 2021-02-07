@@ -6,6 +6,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +28,7 @@ import dev.hiworld.littertrackingapp.Utility.PrivUtility;
 import dev.hiworld.littertrackingapp.Utility.TrashConA;
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -236,6 +240,22 @@ public class MappyFrag extends Fragment {
 
         // Get Provider
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        // Get Shared Preferences
+        SharedPreferences SharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+
+        // Check if logged in
+        if (GoogleSignIn.getLastSignedInAccount(getActivity()) == null && SharedPref.getBoolean(getString(R.string.info_sp_login), true) == true) {
+            // Show login dialogue
+            DialogFragment DiagFrag = new LoginDialogue();
+            DiagFrag.show(getActivity().getFragmentManager(), "LoginFrag");
+
+            // Write value
+            SharedPreferences.Editor editor = SharedPref.edit();
+            editor.putBoolean(getString(R.string.info_sp_login), false);
+            editor.apply();
+        }
     }
 
     private void StartMarkThread(LinkedList<Event>Data,GoogleMap map){

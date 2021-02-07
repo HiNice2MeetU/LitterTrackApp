@@ -1,6 +1,8 @@
 package dev.hiworld.littertrackingapp.UI.UIThree.HomeFragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -65,6 +67,7 @@ public class AccountFrag extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     GoToHome();
+                    ResetDialogue();
                 }
             });
 
@@ -79,8 +82,19 @@ public class AccountFrag extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         GoToHome();
+                        ResetDialogue();
                     }
                 });
+    }
+
+    private void ResetDialogue() {
+        // Get Shared Preferences
+        SharedPreferences SharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        // Write value
+        SharedPreferences.Editor editor = SharedPref.edit();
+        editor.putBoolean(getString(R.string.info_sp_login), true);
+        editor.apply();
     }
 
     private void GoToHome() {
