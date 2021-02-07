@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,6 +56,7 @@ public class CamAcceptance extends Fragment implements MqttCallback {
     private MQAsyncManager MQM = new MQAsyncManager();
     private String BmpBase;
 
+
     public CamAcceptance() {
         // Required empty public constructor
     }
@@ -87,6 +90,9 @@ public class CamAcceptance extends Fragment implements MqttCallback {
 
         MQM.setFailed(true);
 
+        // Get Account
+
+
         // Set Callbacks
         Accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +116,6 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         });
 
         // Location Not Found
-
         Handler LocHandeler = new Handler();
         Runnable LocRunnable = new Runnable(){
             public void run() {
@@ -196,11 +201,19 @@ public class CamAcceptance extends Fragment implements MqttCallback {
             }
         };
 
+        // Make Display name
+        String DisplayName = "Anonymous";
+
+        // Get Account
+        GoogleSignInAccount Account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        if (Account != null) {
+            DisplayName = Account.getDisplayName();
+        }
 
         // Add commands
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
-        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase))), "AddRow"), PublishListener);
+        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase,DisplayName))), "AddRow"), PublishListener);
         //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
         MQM.Next();
 
