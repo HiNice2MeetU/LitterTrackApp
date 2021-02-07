@@ -55,6 +55,7 @@ public class CamAcceptance extends Fragment implements MqttCallback {
     private String PublishID;
     private MQAsyncManager MQM = new MQAsyncManager();
     private String BmpBase;
+    private GoogleSignInAccount Account;
 
 
     public CamAcceptance() {
@@ -91,7 +92,7 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         MQM.setFailed(true);
 
         // Get Account
-
+        Account = GoogleSignIn.getLastSignedInAccount(getActivity());
 
         // Set Callbacks
         Accept.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +144,12 @@ public class CamAcceptance extends Fragment implements MqttCallback {
                             Loc = location;
 
                             // Enable accept button
-                            Accept.setEnabled(true);
+                            if (Account == null) {
+                                // Toast
+                                Toast.makeText(getActivity(), getString(R.string.info_restricted_posting), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Accept.setEnabled(true);
+                            }
 
                             // Show loc found toast if loc not found toast has been shown
                             if (ShowedLocMsg) {
@@ -204,24 +210,17 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         // Make Display name
         String DisplayName = getString(R.string.label_account_default);
 
-        // Get Account
-        GoogleSignInAccount Account = GoogleSignIn.getLastSignedInAccount(getActivity());
-        if (Account != null) {
-            DisplayName = Account.getDisplayName();
+        DisplayName = Account.getDisplayName();
 
-            // Add commands
-            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
-            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
-            PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase,DisplayName))), "AddRow"), PublishListener);
-            //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
-            MQM.Next();
+        // Add commands
+        MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
+        MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
+        PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase,DisplayName))), "AddRow"), PublishListener);
+        //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);
+        MQM.Next();
 
-            // Toast
-            Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
-        } else {
-            // Toast
-            Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
-        }
+        // Toast
+        Toast.makeText(getActivity(), getString(R.string.info_contacting_server), Toast.LENGTH_SHORT).show();
     }
 
     private void NotifyNetErr() {

@@ -29,5 +29,6 @@
     <string name="label_account_cleardata">Clear Data</string>
     <string name="info_generic_hold">Please Wait...</string>
     <string name="label_account">Account</string>
+    <string name="info_restricted_posting">Posting is diabled for anymous users</string>
     <!-- Strings related to login -->
 </resources>
