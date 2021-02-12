@@ -73,7 +73,7 @@ public class MappyFrag extends Fragment {
     IMqttActionListener MQListener = new IMqttActionListener() {
         @Override
         public void onSuccess(IMqttToken asyncActionToken) {
-            Log.d("CameraFrag", "MQM Action Sucesfull");
+            Log.d("MappyFrag", "MQM Action Sucesfull");
             if (MQM.isFailed() == false) {
                 MQM.Next();
             }
@@ -81,7 +81,8 @@ public class MappyFrag extends Fragment {
 
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-            Log.e("CameraFrag", "MQM Action failed");
+            Log.e("MappyFrag", "MQM Action failed");
+            exception.printStackTrace();
             NotifyNetErr();
 
             MQM.setFailed(true);
@@ -107,7 +108,7 @@ public class MappyFrag extends Fragment {
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             // Networking
             MQM.setFailed(false);
-            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", new MqttCallback(){
+            MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(getString(R.string.network_host), new MqttCallback(){
 
                 @Override
                 public void connectionLost(Throwable cause) {
@@ -153,7 +154,7 @@ public class MappyFrag extends Fragment {
 
                 }
 
-            }, false)), "Connect"),MQListener);
+            }, false, getActivity())), "Connect"),MQListener);
             MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
             PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(), "GetAll"), MQListener);
             MQM.Next();

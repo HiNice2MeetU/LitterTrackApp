@@ -1,5 +1,6 @@
 package dev.hiworld.littertrackingapp.Network;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -82,7 +83,9 @@ public class MQAsyncManager {
             switch (Cmd) {
                 case "Connect":
                     // Connect
-                    MQClient.Connect((String) Params.get(0), (MqttCallback) Params.get(1), (boolean) Params.get(2), Listener);
+                    MQClient.Connect((String) Params.get(0), (MqttCallback) Params.get(1), (boolean) Params.get(2), Listener, (Context)Params.get(3));
+                    Params.remove(3);
+                    Msg.setParams(Params);
                     break;
                 case "Disconnect":
                     // Disconnect

@@ -213,7 +213,7 @@ public class CamAcceptance extends Fragment implements MqttCallback {
         DisplayName = Account.getDisplayName();
 
         // Add commands
-        MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList("tcp://192.168.6.133:1883", this, false)), "Connect"),MQListener);
+        MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(getString(R.string.network_host), this, false, getActivity())), "Connect"),MQListener);
         MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList()), "Subscribe"), MQListener);
         PublishID = MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(Loc.getLatitude(),Loc.getLongitude(),BmpBase,DisplayName))), "AddRow"), PublishListener);
         //MQM.Add(new MQMsg(new ArrayList<Object>(Arrays.asList(new Event(100.0,200.0,BmpBase))), "AddRow"), PublishListener);

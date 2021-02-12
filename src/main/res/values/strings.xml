@@ -31,5 +31,6 @@
     <string name="label_account">Account</string>
     <string name="info_restricted_posting">Posting is diabled for anymous users</string>
     <string name="info_sp_login">ShowLoginDialogue</string>
+    <string name="network_host" translatable="false">ssl://hallo.home:8883</string>
     <!-- Strings related to login -->
 </resources>

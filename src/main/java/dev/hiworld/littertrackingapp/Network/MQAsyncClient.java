@@ -1,7 +1,8 @@
 package dev.hiworld.littertrackingapp.Network;
 
+import android.content.Context;
 import android.util.Log;
-
+import dev.hiworld.littertrackingapp.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -13,13 +14,45 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import dev.hiworld.littertrackingapp.Utility.UtilityManager;
 
 public class MQAsyncClient {
+
+    // Simple steps to make proper pem file
+
+    // Genorate .PEM File (Dont use what u have)
+
+    // echo | openssl s_client -connect ${MY_SERVER}:443 2>&1 | \
+    // sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > mycert.pem
+
+    // Make .bks file
+
+    // export CLASSPATH=/path/to/bouncycastle/bcprov-jdk15on-155.jar
+    //CERTSTORE=res/raw/mystore.bks
+    //if [ -a $CERTSTORE ]; then
+    //    rm $CERTSTORE || exit 1
+    //fi
+    //keytool \
+    //      -import \
+    //      -v \
+    //      -trustcacerts \
+    //      -alias 0 \
+    //      -file <(openssl x509 -in mycert.pem) \
+    //      -keystore $CERTSTORE \
+    //      -storetype BKS \
+    //      -provider org.bouncycastle.jce.provider.BouncyCastleProvider \
+    //      -providerpath /path/to/bouncycastle/bcprov-jdk15on-155.jar \
+    //      -storepass some-password
+
     // Globals
     private MqttAsyncClient MQAsync;
     private MemoryPersistence Persistence = new MemoryPersistence();
@@ -57,7 +90,7 @@ public class MQAsyncClient {
     }
 
     // Connect
-    public void Connect(String BrokerUri, MqttCallback RecieveCall, boolean AutoSub, IMqttActionListener SucessCall) {
+    public void Connect(String BrokerUri, MqttCallback RecieveCall, boolean AutoSub, IMqttActionListener SucessCall, Context con) {
         // Make Client
         try {
             MQAsync = new MqttAsyncClient(BrokerUri, SessionID, Persistence);
@@ -67,6 +100,10 @@ public class MQAsyncClient {
 
             // Make Connection Options
             MqttConnectOptions MQConOptions = new MqttConnectOptions();
+
+            // Set Socket Factory
+            MQConOptions.setSocketFactory(MQSSL.getSocketFactory(con));
+
 
             // Set Connection Options
             MQConOptions.setCleanSession(true);
