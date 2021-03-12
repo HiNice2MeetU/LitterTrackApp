@@ -7,7 +7,7 @@ You take a photo of a piece of trash, then it will automatically geotag it and p
 right thing to do). 
 
 #### For What Platforms?
-It is being developed as an android app in java + the backend (which is not in this repo) is also developed in java!
+It is being developed as an android app in java + the backend is also developed in java!
 
 #### Uses
 - Android Studio
