@@ -1,0 +1,15 @@
+[0;34mSQLITE: Connection to../Data.db Is active[0m
+[0;34mSQLITE/Inserting : 0[0m
+[0;33mAdmin: Executing Next: MQListMsg{Listener=Main$1@27082746, Msg=MQMsg{TypeList=[], Params=[tcp://192.168.6.133:1883, Main$2@66133adc, false], SessionID='0Fi9E8jAc&OQ58YpDQgF', TransactionID='6n8#GsS5YZ', Cmd='Connect'}}[0m
+[0;36mServer: Didn't autosub[0m
+[0;36mServer: MQM Action Sucesfull[0m
+[0;33mAdmin: Executing Next: MQListMsg{Listener=Main$1@27082746, Msg=MQMsg{TypeList=[], Params=[], SessionID='0Fi9E8jAc&OQ58YpDQgF', TransactionID='6MMLW7K8S9', Cmd='Subscribe'}}[0m
+[0;33mAdmin: Subbing@Executor[0m
+[0;36mServer: MQM Action Sucesfull[0m
+[0;33mAdmin: Executing Next: MQListMsg{Listener=Main$1@27082746, Msg=MQMsg{TypeList=[], Params=[Event{Latitude=692.0, Longitude=86.0, Bmp=FiftyFour}, Event{Latitude=96.0, Longitude=96.0, Bmp=NinetySix}], SessionID='0Fi9E8jAc&OQ58YpDQgF', TransactionID='=qy*-#R4o)', Cmd='Ladida'}}[0m
+[0;33mAdmin: Publishing@Executor[0m
+[0;36mServer: Publishing: {"TypeList":["Event","Event"],"Params":[{"Latitude":692.0,"Longitude":86.0,"Bmp":"FiftyFour"},{"Latitude":96.0,"Longitude":96.0,"Bmp":"NinetySix"}],"SessionID":"0Fi9E8jAc\u0026OQ58YpDQgF","TransactionID":"\u003dqy*-#R4o)","Cmd":"Ladida","Result":0}[0m
+[0;36mServer: MQM Action Sucesfull[0m
+[1;31mERR/Admin/Cannot Next on null list[0m
+[0;33mAdmin: Exiting[0m
+[0;34mSQLITE: Connection has been closed[0m
