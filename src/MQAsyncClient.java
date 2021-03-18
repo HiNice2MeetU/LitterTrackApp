@@ -109,7 +109,7 @@ public class MQAsyncClient {
 
 			// SSL Magic
 			MQConOptions.setSocketFactory(SslUtil.getSocketFactory(ServerCrt,
-					ClientCrt, ClientKey, "MqCambourneVC1!"));
+					ClientCrt, ClientKey, "138"));
 
 			// Set Connection Options
 			MQConOptions.setCleanSession(true);
