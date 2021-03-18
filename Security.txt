@@ -1,2 +1,0 @@
-The certificates that are needed for this are not included in this git repo,
-you will have to make your own
